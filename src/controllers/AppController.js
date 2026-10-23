@@ -37,6 +37,37 @@ export class AppController {
     const scrollContainer = document.getElementById('scrollViewport') || mainContainer;
     scrollContainer.scrollTop = 0;
 
+    // Header, Footer, dan Mobile Bottom Bar hanya ditampilkan di Beranda (viewHome).
+    // Saat membuka modul lain (Kenali Bumi, Taman Aksi, Misi), sembunyikan agar halaman fokus dan menggunakan tombol kembali (back button).
+    const isHome = (viewId === 'viewHome');
+    const appHeader = document.querySelector('header');
+    const appFooter = document.getElementById('appFooter');
+    const mobileNav = document.querySelector('nav.md\\:hidden');
+
+    if (appHeader) {
+      if (isHome) {
+        appHeader.classList.remove('hidden');
+      } else {
+        appHeader.classList.add('hidden');
+      }
+    }
+
+    if (appFooter) {
+      if (isHome) {
+        appFooter.classList.remove('hidden');
+      } else {
+        appFooter.classList.add('hidden');
+      }
+    }
+
+    if (mobileNav) {
+      if (isHome) {
+        mobileNav.classList.remove('hidden');
+      } else {
+        mobileNav.classList.add('hidden');
+      }
+    }
+
     // Render view yang sesuai
     if (this.views[viewId]) {
       this.views[viewId].render(mainContainer);

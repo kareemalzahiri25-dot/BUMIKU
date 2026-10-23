@@ -14,15 +14,20 @@ export class MisiPahlawanView {
 
         <!-- HERO TROPHY VAULT BANNER -->
         <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 rounded-3xl p-6 lg:p-8 text-white shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
-          <div class="space-y-2 text-center md:text-left">
-            <span class="text-xs font-black uppercase tracking-wider text-emerald-200">Prestasi SDG 13 & SDG 4</span>
-            <div class="flex items-center justify-center md:justify-start space-x-3">
-              <span class="text-4xl">🏆</span>
-              <span class="text-2xl lg:text-3xl font-black">Lemari Lencana Penjaga Bumi</span>
+          <div class="flex items-center space-x-4">
+            <button id="btnBackHomeFromMisi" class="w-10 h-10 md:w-11 md:h-11 rounded-2xl bg-white/20 hover:bg-white/30 text-white flex items-center justify-center backdrop-blur-xs tactile-btn shrink-0" title="Kembali ke Beranda">
+              <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </button>
+            <div class="space-y-1 text-left">
+              <span class="text-xs font-black uppercase tracking-wider text-emerald-200">Prestasi SDG 13 & SDG 4</span>
+              <div class="flex items-center space-x-2 sm:space-x-3">
+                <span class="text-2xl sm:text-3xl lg:text-4xl">🏆</span>
+                <span class="text-lg sm:text-2xl lg:text-3xl font-black">Lemari Lencana Penjaga Bumi</span>
+              </div>
+              <p class="text-xs md:text-sm font-semibold text-emerald-100 max-w-xl">
+                Kumpulkan piala penghargaan dengan menyelesaikan simulasi di Taman Aksi Hijau dan menjawab kuis sains iklim!
+              </p>
             </div>
-            <p class="text-xs md:text-sm font-semibold text-emerald-100 max-w-xl">
-              Kumpulkan piala penghargaan dengan menyelesaikan simulasi di Taman Aksi Hijau dan menjawab kuis sains iklim!
-            </p>
           </div>
 
           <button id="btnStartClimateQuiz" class="bg-white hover:bg-emerald-50 text-emerald-950 font-black text-xs md:text-sm px-6 py-3.5 rounded-full shadow-lg tactile-btn flex items-center space-x-2 shrink-0">
@@ -133,6 +138,10 @@ export class MisiPahlawanView {
   }
 
   bindEvents(container) {
+    container.querySelector('#btnBackHomeFromMisi')?.addEventListener('click', () => {
+      this.appController.switchView('viewHome');
+    });
+
     container.querySelector('#btnStartClimateQuiz')?.addEventListener('click', () => {
       this.quizController.startQuiz();
     });
