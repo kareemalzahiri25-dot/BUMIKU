@@ -34,14 +34,32 @@ export class AppController {
     const mainContainer = document.getElementById('mainViewport');
     if (!mainContainer) return;
 
-    mainContainer.scrollTop = 0;
+    const scrollContainer = document.getElementById('scrollViewport') || mainContainer;
+    scrollContainer.scrollTop = 0;
 
     // Render view yang sesuai
     if (this.views[viewId]) {
       this.views[viewId].render(mainContainer);
     }
 
-    // Update active state di Sidebar Desktop
+    // Update active state di Top Navbar Desktop
+    const navMap = {
+      viewHome: 'topNavHome',
+      viewKenaliBumi: 'topNavKenali',
+      viewTamanAksi: 'topNavTamanAksi',
+      viewMisiPahlawan: 'topNavMisi'
+    };
+
+    document.querySelectorAll('.top-nav-btn').forEach(btn => {
+      btn.className = 'top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white transition-all tactile-btn';
+    });
+
+    const activeTopBtn = document.getElementById(navMap[viewId]);
+    if (activeTopBtn) {
+      activeTopBtn.className = 'top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-black text-xs lg:text-sm text-[#00838f] bg-[#e0f7fa] border border-cyan-200/80 shadow-xs transition-all tactile-btn';
+    }
+
+    // Fallback support untuk Sidebar jika masih ada
     const sideMap = {
       viewHome: 'sideNavHome',
       viewKenaliBumi: 'sideNavKenali',
@@ -103,11 +121,31 @@ export class AppController {
   }
 
   bindGlobalEvents() {
-    // Tombol Navigasi Desktop Sidebar
+    // Tombol Navigasi Top Navbar Desktop
+    document.getElementById('topNavHome')?.addEventListener('click', () => this.switchView('viewHome'));
+    document.getElementById('topNavKenali')?.addEventListener('click', () => this.switchView('viewKenaliBumi'));
+    document.getElementById('topNavTamanAksi')?.addEventListener('click', () => this.switchView('viewTamanAksi'));
+    document.getElementById('topNavMisi')?.addEventListener('click', () => this.switchView('viewMisiPahlawan'));
+    document.getElementById('topBrandLogo')?.addEventListener('click', () => this.switchView('viewHome'));
+
+    // Tombol Navigasi Footer
+    document.getElementById('footerNavHome')?.addEventListener('click', () => this.switchView('viewHome'));
+    document.getElementById('footerNavKenali')?.addEventListener('click', () => this.switchView('viewKenaliBumi'));
+    document.getElementById('footerNavTamanAksi')?.addEventListener('click', () => this.switchView('viewTamanAksi'));
+    document.getElementById('footerNavMisi')?.addEventListener('click', () => this.switchView('viewMisiPahlawan'));
+    document.getElementById('footerBrandLogo')?.addEventListener('click', () => this.switchView('viewHome'));
+    document.getElementById('btnFooterTerraGreeting')?.addEventListener('click', () => this.speakTerraGreeting());
+    document.getElementById('btnFooterInfoModal')?.addEventListener('click', () => {
+      sound.playPop();
+      document.getElementById('infoModal')?.classList.remove('hidden');
+    });
+
+    // Fallback Tombol Navigasi Desktop Sidebar (jika ada)
     document.getElementById('sideNavHome')?.addEventListener('click', () => this.switchView('viewHome'));
     document.getElementById('sideNavKenali')?.addEventListener('click', () => this.switchView('viewKenaliBumi'));
     document.getElementById('sideNavTamanAksi')?.addEventListener('click', () => this.switchView('viewTamanAksi'));
     document.getElementById('sideNavMisi')?.addEventListener('click', () => this.switchView('viewMisiPahlawan'));
+    document.getElementById('sideBrandLogo')?.addEventListener('click', () => this.switchView('viewHome'));
 
     // Tombol Navigasi Mobile
     document.getElementById('mobileNavHome')?.addEventListener('click', () => this.switchView('viewHome'));
