@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BUMIKU</title>
-  <meta name="description" content="BUMIKU - Pahlawan Cilik Penjaga Iklim">
+  <title>BumiKita &mdash; Petualangan Pahlawan Cilik Penjaga Iklim (SDGs 4 & 13)</title>
+  <meta name="description" content="BumiKita - Media Pembelajaran Iklim Interaktif Ramah Anak Usia SD-SMP (SDG 4 & SDG 13)">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="BUMIKU">
-  <meta property="og:site_name" content="BUMIKU">
+  <meta property="og:title" content="BumiKita">
+  <meta property="og:site_name" content="BumiKita">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="BUMIKU">
+  <meta name="twitter:title" content="BumiKita">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Google Fonts: Nunito & Plus Jakarta Sans -->
+  <!-- Google Fonts: Fredoka (Display), Quicksand & Nunito (Body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;800&family=Nunito:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
 
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -27,19 +27,32 @@
 
   <style>
     :root {
-      --color-primary: #0097a7;
-      --color-primary-hover: #00838f;
-      --color-primary-subtle: #e0f7fa;
+      --color-primary: #fbbf24;
+      --color-primary-hover: #f59e0b;
+      --color-primary-subtle: #fef3c7;
+      --color-secondary: #0284c7;
+      --color-secondary-subtle: #e0f2fe;
       --color-eco-green: #10b981;
-      --color-secondary: #f59e0b;
+      --color-eco-green-hover: #059669;
+      --color-accent-purple: #8b5cf6;
+      --color-accent-pink: #f43f5e;
+    }
+
+    html, body {
+      overflow-x: hidden;
+      max-width: 100vw;
     }
 
     body {
       font-family: 'Nunito', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-      background-color: #f1f5f9;
-      color: #1e293b;
+      background-color: #f0f9ff;
+      color: #0f172a;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
+    }
+
+    .font-display {
+      font-family: 'Fredoka', 'Quicksand', 'Nunito', system-ui, sans-serif;
     }
 
     .tnum {
@@ -49,17 +62,17 @@
 
     @keyframes gentle-bounce {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
+      50% { transform: translateY(-6px); }
     }
 
     @keyframes float-wiggle {
-      0%, 100% { transform: rotate(-2deg); }
-      50% { transform: rotate(2deg); }
+      0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+      50% { transform: translateY(-8px) rotate(1.5deg); }
     }
 
     @keyframes pulse-glow {
-      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(16, 185, 129, 0)); }
-      50% { transform: scale(1.06); filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.45)); }
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(251, 191, 36, 0)); }
+      50% { transform: scale(1.04); filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.5)); }
     }
 
     .animate-gentle-bounce {
@@ -67,7 +80,7 @@
     }
 
     .animate-float-wiggle {
-      animation: float-wiggle 3.2s ease-in-out infinite;
+      animation: float-wiggle 3.5s ease-in-out infinite;
     }
 
     .animate-pulse-glow {
@@ -75,10 +88,13 @@
     }
 
     .tactile-btn {
-      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tactile-btn:hover {
+      transform: translateY(-2px);
     }
     .tactile-btn:active {
-      transform: scale(0.96);
+      transform: translateY(1px) scale(0.97);
     }
 
     .no-scrollbar::-webkit-scrollbar {
@@ -88,56 +104,103 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+    /* Efek Awan Bergerak Header (WonderLearn Animated Clouds) */
+    .awan-header {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      transform: translateY(98%);
+      width: 200%;
+      height: 28px;
+      pointer-events: none;
+      animation: geserAwan 36s linear infinite;
+    }
+    @media (min-width: 768px) {
+      .awan-header {
+        height: 34px;
+      }
+    }
+    .awan-header svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 4px 6px rgba(2, 132, 199, 0.05));
+    }
+    @keyframes geserAwan {
+      from { transform: translateY(98%) translateX(0); }
+      to { transform: translateY(98%) translateX(-50%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .awan-header { animation: none; }
+    }
   </style>
 </head>
-<body class="min-h-screen bg-[#f1f5f9] flex flex-col antialiased">
+<body class="min-h-screen bg-[#f0f9ff] flex flex-col antialiased">
 
   <!-- MAIN APP CONTAINER -->
-  <div class="flex-1 flex flex-col w-full max-w-[1600px] mx-auto min-h-screen bg-[#f8fafc] md:shadow-xl md:my-3 md:rounded-3xl border border-slate-200/80 overflow-hidden">
+  <div class="flex-1 flex flex-col w-full max-w-[1600px] mx-auto min-h-screen bg-[#f0f9ff] md:shadow-2xl md:my-2 md:rounded-[32px] border border-sky-100 overflow-hidden">
 
     <!-- TOP APPLICATION NAVBAR -->
-    <header class="bg-white border-b border-slate-200/80 sticky top-0 z-40 px-4 lg:px-8 py-3 shrink-0 shadow-xs">
-      <div class="flex items-center justify-between gap-4">
+    <header class="bg-white sticky top-0 z-40 px-3 sm:px-4 lg:px-8 py-2.5 sm:py-3.5 shrink-0 relative" style="overflow-x: clip;">
+      <div class="flex items-center justify-between gap-2 sm:gap-3 lg:gap-6">
         
-        <!-- Left: Brand Logo with Terra Avatar (Clean without SDG badges) -->
-        <div id="topBrandLogo" class="flex items-center space-x-3 cursor-pointer shrink-0 w-auto md:w-56" title="BumiKita - Kembali ke Beranda">
-          <div class="w-10 h-10 lg:w-11 lg:h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 flex items-center justify-center text-white shadow-md shadow-emerald-900/15 overflow-hidden">
-            <img src="public/images/characters/terra_turnaround_front.png" alt="BumiKita Terra" class="w-full h-full object-contain" />
+        <!-- Left: Brand Logo with Plain Terra Avatar (Clean BUMIKU) -->
+        <div id="topBrandLogo" class="flex items-center space-x-2 sm:space-x-3 cursor-pointer shrink-0" title="BUMIKU - Kembali ke Beranda">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center shrink-0">
+            <img src="public/images/characters/terra_turnaround_front.png" alt="BUMIKU Terra" class="w-full h-full object-contain" />
           </div>
           <div>
-            <span class="text-base lg:text-lg font-black tracking-tight text-slate-800 block leading-tight">BumiKita</span>
-            <p class="text-[10px] lg:text-[11px] font-bold text-slate-400 leading-tight">Pahlawan Cilik Iklim</p>
+            <span class="text-lg sm:text-xl lg:text-2xl font-black tracking-tight text-[#0284c7] font-display block leading-none">BUMIKU</span>
           </div>
         </div>
 
         <!-- Center: Centered Desktop & Tablet Horizontal Navigation Tabs -->
-        <div class="hidden md:flex flex-1 justify-center">
-          <nav class="flex items-center space-x-1.5 lg:space-x-2 bg-slate-50/80 p-1.5 rounded-2xl border border-slate-200/60 shadow-2xs">
-            <button id="topNavHome" class="top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-black text-xs lg:text-sm text-[#00838f] bg-[#e0f7fa] border border-cyan-200/80 shadow-xs transition-all tactile-btn">
-              <i data-lucide="compass" class="w-4 h-4"></i>
+        <div class="hidden md:flex flex-1 justify-center max-w-xl">
+          <nav class="flex items-center space-x-1 lg:space-x-1.5 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/60 shadow-2xs">
+            <button id="topNavHome" class="top-nav-btn flex items-center space-x-1.5 px-3.5 lg:px-4 py-2 rounded-full font-bold text-xs lg:text-sm text-[#0284c7] bg-white shadow-xs transition-all tactile-btn">
+              <i data-lucide="home" class="w-4 h-4"></i>
               <span>Beranda</span>
             </button>
 
-            <button id="topNavKenali" class="top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white transition-all tactile-btn">
+            <button id="topNavKenali" class="top-nav-btn flex items-center space-x-1.5 px-3.5 lg:px-4 py-2 rounded-full font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white/70 transition-all tactile-btn">
               <i data-lucide="book-open" class="w-4 h-4"></i>
               <span>Sains</span>
             </button>
 
-            <button id="topNavTamanAksi" class="top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white transition-all tactile-btn">
+            <button id="topNavTamanAksi" class="top-nav-btn flex items-center space-x-1.5 px-3.5 lg:px-4 py-2 rounded-full font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white/70 transition-all tactile-btn">
               <i data-lucide="sprout" class="w-4 h-4"></i>
-              <span>Aksi</span>
+              <span>Taman Aksi</span>
             </button>
 
-            <button id="topNavMisi" class="top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white transition-all tactile-btn">
-              <i data-lucide="target" class="w-4 h-4"></i>
+            <button id="topNavMisi" class="top-nav-btn flex items-center space-x-1.5 px-3.5 lg:px-4 py-2 rounded-full font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white/70 transition-all tactile-btn">
+              <i data-lucide="award" class="w-4 h-4"></i>
               <span>Misi</span>
             </button>
           </nav>
         </div>
 
-        <!-- Right: Spacer to keep Center perfectly centered -->
-        <div class="hidden md:block w-56 shrink-0"></div>
+        <!-- Right: Target Belajar Siswa Mode Switcher (SD vs SMP) -->
+        <div class="flex items-center justify-end shrink-0">
+          <div class="inline-flex p-0.5 sm:p-1 bg-slate-100/90 rounded-full border border-slate-200/60 shadow-2xs whitespace-nowrap" title="Target Belajar Siswa: Pilih mode tampilan">
+            <button id="btnModeSD" class="px-2.5 sm:px-3.5 lg:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black transition-all tactile-btn flex items-center space-x-1 sm:space-x-1.5 bg-[#fbbf24] text-slate-900 shadow-xs">
+              <span>🌱</span>
+              <span>Penjelajah</span>
+            </button>
+            <button id="btnModeSMP" class="px-2.5 sm:px-3.5 lg:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black transition-all tactile-btn flex items-center space-x-1 sm:space-x-1.5 text-slate-500 hover:text-slate-800">
+              <span>🔬</span>
+              <span>Peneliti</span>
+            </button>
+          </div>
+        </div>
 
+      </div>
+
+      <!-- Efek Awan Bergerak Header (WonderLearn Animated Clouds) -->
+      <div class="awan-header" id="awanHeader" aria-hidden="true">
+        <svg viewBox="0 0 2880 40" preserveAspectRatio="none">
+          <path id="pAwan" fill="#ffffff" d="M0,0 L2880,0 L2880,6 c -53,28 -123,28 -176,0 c -39,15 -53,15 -92,0 c -37,23 -111,23 -148,0 c -85,33 -139,33 -224,0 c -24,17 -84,17 -108,0 c -61,29 -123,29 -184,0 c -34,12 -42,12 -76,0 c -42,25 -114,25 -156,0 c -73,32 -131,32 -204,0 c -17,13 -55,13 -72,0 c -53,28 -123,28 -176,0 c -39,15 -53,15 -92,0 c -37,23 -111,23 -148,0 c -85,33 -139,33 -224,0 c -24,17 -84,17 -108,0 c -61,29 -123,29 -184,0 c -34,12 -42,12 -76,0 c -42,25 -114,25 -156,0 c -73,32 -131,32 -204,0 c -17,13 -55,13 -72,0 L0,0 Z"/>
+        </svg>
       </div>
     </header>
 
@@ -145,98 +208,130 @@
     <div id="scrollViewport" class="flex-1 overflow-y-auto no-scrollbar flex flex-col justify-between">
       
       <!-- DYNAMIC MAIN VIEWPORT RENDERED BY MVC VIEWS -->
-      <main id="mainViewport" class="p-4 md:p-8 space-y-6 flex-1 pb-24 md:pb-10">
+      <main id="mainViewport" class="p-3 sm:p-5 md:p-8 space-y-6 flex-1 pb-24 md:pb-10">
         <!-- Rendered by HomeView, KenaliBumiView, TamanAksiView, MisiPahlawanView -->
       </main>
 
-      <!-- GLOBAL FOOTER EDUKATIF BUMIKITA -->
-      <footer id="appFooter" class="bg-white border-t border-slate-200/80 px-6 py-8 md:px-12 md:py-10 mt-auto">
-        <div class="max-w-7xl mx-auto space-y-8">
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-6 lg:gap-8 items-start">
+      <!-- GLOBAL FOOTER EDUKATIF BUMIKITA (WonderLearn Wave Style) -->
+      <footer id="appFooter" class="bg-[#0d9488] text-white pt-12 pb-24 md:pb-10 px-6 lg:px-12 mt-auto relative overflow-hidden">
+        
+        <!-- Decorative subtle wave/cloud backdrop -->
+        <div class="absolute -top-12 left-0 right-0 h-16 bg-[#f0f9ff] rounded-b-[100%] pointer-events-none opacity-20"></div>
+
+        <div class="max-w-7xl mx-auto space-y-10 relative z-10">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 items-start">
             
-            <!-- Col 1: Brand & Visi -->
-            <div class="md:col-span-2 space-y-3">
+            <!-- Col 1 & 2: Brand & Visi -->
+            <div class="lg:col-span-2 space-y-4">
               <div id="footerBrandLogo" class="flex items-center space-x-3 cursor-pointer">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 flex items-center justify-center text-white shadow-md shadow-emerald-900/15 overflow-hidden">
+                <div class="w-11 h-11 rounded-2xl bg-white p-1 flex items-center justify-center text-teal-800 shadow-md overflow-hidden">
                   <img src="public/images/characters/terra_turnaround_front.png" alt="BumiKita Terra" class="w-full h-full object-contain" />
                 </div>
                 <div>
-                  <span class="text-base font-black text-slate-800 block">BumiKita</span>
-                  <p class="text-xs font-bold text-slate-400">Pahlawan Cilik Penjaga Iklim</p>
+                  <span class="text-2xl font-black text-white font-display block leading-none">BumiKita</span>
+                  <p class="text-xs font-semibold text-teal-100 mt-0.5">Petualangan Pahlawan Cilik Iklim</p>
                 </div>
               </div>
-              <p class="text-xs font-semibold text-slate-500 leading-relaxed max-w-md">
-                Inovasi media belajar interaktif berbasis gamifikasi dan simulasi nyata untuk anak usia 5–15 tahun. Mengubah konsep sains iklim abstrak menjadi aksi nyata sehari-hari demi masa depan bumi berkelanjutan.
+              <p class="text-xs font-medium text-teal-50/90 leading-relaxed max-w-sm">
+                Menjadikan edukasi iklim seru, interaktif, dan nyata untuk seluruh anak Indonesia. Mengubah pemahaman sains iklim abstrak menjadi kebiasaan menjaga bumi sejak dini (SDGs 4 & 13).
               </p>
               <div class="flex flex-wrap gap-2 pt-1">
-                <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+                <span class="text-[10px] font-bold text-emerald-950 bg-emerald-300/90 px-3 py-1 rounded-full">
                   🌍 Aksi Nyata SDG 13
                 </span>
-                <span class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-full">
+                <span class="text-[10px] font-bold text-teal-950 bg-teal-200/90 px-3 py-1 rounded-full">
                   📚 Pendidikan Berkualitas SDG 4
-                </span>
-                <span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 border border-cyan-200 px-2.5 py-1 rounded-full">
-                  🎮 Gamifikasi Interaktif
                 </span>
               </div>
             </div>
 
-            <!-- Col 2: Navigasi Modul -->
+            <!-- Col 3: Jelajah Cepat -->
             <div class="space-y-3">
-              <h4 class="text-xs font-black uppercase tracking-wider text-slate-400">Jelajah Modul</h4>
-              <ul class="space-y-2 text-xs font-bold text-slate-600">
+              <h4 class="text-xs font-black uppercase tracking-wider text-teal-200">Jelajah Cepat</h4>
+              <ul class="space-y-2 text-xs font-semibold text-teal-50">
                 <li>
-                  <button id="footerNavHome" class="hover:text-emerald-600 transition-colors flex items-center space-x-1.5">
-                    <span>🧭</span><span>Beranda</span>
+                  <button id="footerNavHome" class="hover:text-yellow-300 transition-colors flex items-center space-x-1.5">
+                    <span>🧭</span><span>Beranda Utama</span>
                   </button>
                 </li>
                 <li>
-                  <button id="footerNavKenali" class="hover:text-emerald-600 transition-colors flex items-center space-x-1.5">
-                    <span>📖</span><span>Sains</span>
+                  <button id="footerNavKenali" class="hover:text-yellow-300 transition-colors flex items-center space-x-1.5">
+                    <span>📖</span><span>Sains Kenali Bumi</span>
                   </button>
                 </li>
                 <li>
-                  <button id="footerNavTamanAksi" class="hover:text-emerald-600 transition-colors flex items-center space-x-1.5">
-                    <span>🌱</span><span>Aksi</span>
+                  <button id="footerNavTamanAksi" class="hover:text-yellow-300 transition-colors flex items-center space-x-1.5">
+                    <span>🌱</span><span>Simulasi Taman Aksi</span>
                   </button>
                 </li>
                 <li>
-                  <button id="footerNavMisi" class="hover:text-emerald-600 transition-colors flex items-center space-x-1.5">
-                    <span>🎯</span><span>Misi</span>
+                  <button id="footerNavMisi" class="hover:text-yellow-300 transition-colors flex items-center space-x-1.5">
+                    <span>🎯</span><span>Misi & Lencana</span>
                   </button>
                 </li>
               </ul>
             </div>
 
-            <!-- Col 3: Sahabat Iklim & Suara -->
+            <!-- Col 4: Untuk Guru & Ortu -->
             <div class="space-y-3">
-              <h4 class="text-xs font-black uppercase tracking-wider text-slate-400">Interaksi & Bantuan</h4>
+              <h4 class="text-xs font-black uppercase tracking-wider text-teal-200">Guru & Orang Tua</h4>
+              <ul class="space-y-2 text-xs font-semibold text-teal-50">
+                <li>
+                  <button id="btnFooterTerraGreeting" class="hover:text-yellow-300 transition-colors flex items-center space-x-1.5">
+                    <span>🔊</span><span>Sapaan Suara Terra</span>
+                  </button>
+                </li>
+                <li>
+                  <button id="btnFooterInfoModal" class="hover:text-yellow-300 transition-colors flex items-center space-x-1.5">
+                    <span>📋</span><span>Riset Esai SDG 4 & 13</span>
+                  </button>
+                </li>
+                <li>
+                  <span class="text-teal-200/80">Panduan Kelas SD & SMP</span>
+                </li>
+                <li>
+                  <span class="text-teal-200/80">Pusat Bantuan & Tanya</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Col 5: Tetap Terhubung (WonderLearn Newsletter) -->
+            <div class="space-y-3">
+              <h4 class="text-xs font-black uppercase tracking-wider text-teal-200">Tetap Terhubung</h4>
+              <p class="text-[11px] text-teal-100">Dapatkan dongeng iklim dan misi baru setiap minggu!</p>
               <div class="space-y-2">
-                <button id="btnFooterTerraGreeting" class="w-full text-left px-3 py-2 bg-emerald-50 hover:bg-emerald-100 rounded-xl text-xs font-bold text-emerald-800 transition-colors flex items-center space-x-2">
-                  <i data-lucide="volume-2" class="w-3.5 h-3.5 text-emerald-600"></i>
-                  <span>Dengar Sapaan Terra 🌱</span>
+                <input type="email" placeholder="Masukkan email orang tua..." class="w-full px-3.5 py-2 rounded-full text-xs text-slate-800 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+                <button class="w-full py-2 bg-[#fbbf24] hover:bg-[#f59e0b] text-[#1e293b] font-black text-xs rounded-full shadow-md transition-colors tactile-btn">
+                  Langganan
                 </button>
-                <button id="btnFooterInfoModal" class="w-full text-left px-3 py-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-xs font-bold text-slate-700 transition-colors flex items-center space-x-2">
-                  <i data-lucide="info" class="w-3.5 h-3.5 text-slate-500"></i>
-                  <span>Tentang Riset & Esai</span>
-                </button>
+              </div>
+              <div class="flex items-center space-x-3 pt-2 text-white">
+                <span class="w-7 h-7 rounded-full bg-teal-800/80 flex items-center justify-center hover:bg-teal-700 cursor-pointer">
+                  <i data-lucide="youtube" class="w-3.5 h-3.5"></i>
+                </span>
+                <span class="w-7 h-7 rounded-full bg-teal-800/80 flex items-center justify-center hover:bg-teal-700 cursor-pointer">
+                  <i data-lucide="instagram" class="w-3.5 h-3.5"></i>
+                </span>
+                <span class="w-7 h-7 rounded-full bg-teal-800/80 flex items-center justify-center hover:bg-teal-700 cursor-pointer">
+                  <i data-lucide="heart" class="w-3.5 h-3.5"></i>
+                </span>
               </div>
             </div>
 
           </div>
 
           <!-- Bottom Copyright & Credits -->
-          <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-            <p class="text-[11px] font-semibold text-slate-400">
-              © 2026 BumiKita — Pahlawan Cilik Penjaga Iklim. Didesain dengan penuh cinta untuk bumi kita tercinta.
+          <div class="pt-6 border-t border-teal-700/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <p class="text-[11px] font-semibold text-teal-100/80">
+              © 2026 BumiKita — Didesain dengan penuh cinta untuk anak Indonesia dan kelestarian bumi kita.
             </p>
-            <div class="flex items-center space-x-3 text-[11px] font-bold text-slate-500">
+            <div class="flex items-center space-x-3 text-[11px] font-bold text-teal-200">
               <span class="flex items-center space-x-1">
                 <span>🌱</span>
                 <span>Level 2 Sahabat Bumi</span>
               </span>
               <span>•</span>
-              <span class="text-emerald-600">Terbuka untuk Semua Anak Indonesia</span>
+              <span class="text-yellow-300">Aplikasi Terbuka & Ramah Anak</span>
             </div>
           </div>
         </div>
@@ -247,9 +342,9 @@
   </div>
 
   <!-- MOBILE BOTTOM BAR NAVIGATION -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-4 py-2.5 flex items-center justify-around z-30 shadow-lg">
-    <button id="mobileNavHome" class="mobile-nav-btn flex flex-col items-center justify-center text-[#0097a7] tactile-btn">
-      <i data-lucide="compass" class="w-5 h-5"></i>
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-sky-100 px-4 py-2.5 flex items-center justify-around z-30 shadow-lg">
+    <button id="mobileNavHome" class="mobile-nav-btn flex flex-col items-center justify-center text-[#0284c7] tactile-btn">
+      <i data-lucide="home" class="w-5 h-5"></i>
       <span class="text-[10px] font-black mt-0.5">Beranda</span>
     </button>
     <button id="mobileNavKenali" class="mobile-nav-btn flex flex-col items-center justify-center text-slate-400 tactile-btn">
@@ -261,7 +356,7 @@
       <span class="text-[10px] font-bold mt-0.5">Aksi</span>
     </button>
     <button id="mobileNavMisi" class="mobile-nav-btn flex flex-col items-center justify-center text-slate-400 tactile-btn">
-      <i data-lucide="target" class="w-5 h-5"></i>
+      <i data-lucide="award" class="w-5 h-5"></i>
       <span class="text-[10px] font-bold mt-0.5">Misi</span>
     </button>
   </nav>
@@ -281,18 +376,38 @@
 
       <div class="space-y-3 text-xs md:text-sm font-semibold text-slate-600 leading-relaxed">
         <p>
-          <strong>Tema Esai:</strong><br>
-          <span class="text-slate-800">Pendidikan Berkualitas di Era Perubahan Iklim: Strategi dan Inovasi Teknologi untuk Generasi Berkelanjutan dalam mendukung SDGs 4&13</span>
+          <strong>Tema Esai & Inovasi:</strong><br>
+          <span class="text-slate-800">Pendidikan Berkualitas di Era Perubahan Iklim: Strategi dan Inovasi Teknologi untuk Generasi Berkelanjutan dalam mendukung SDGs 4 & 13</span>
         </p>
         <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 text-emerald-950 space-y-1">
           <p class="font-black">Tujuan Utama:</p>
           <p class="text-xs">
-            Memberdayakan anak usia 5–15 tahun melalui gamifikasi interaktif. Anak memahami bahwa tindakan nyata (memilah sampah, bersepeda, menanam pohon) memiliki dampak langsung mendinginkan suhu bumi.
+            Memberdayakan anak usia 5–15 tahun melalui gamifikasi interaktif. Anak memahami bahwa tindakan nyata (memilah sampah, hemat listrik, menanam pohon) memiliki dampak langsung mendinginkan suhu bumi.
           </p>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- SCRIPT GENERATOR AWAN GELOMBANG VARIATIF HEADER -->
+  <script>
+    const POLA_VARIATIF_AWAN = [
+      {w:176,d:28,s:0.30},{w:92,d:15,s:0.42},{w:148,d:23,s:0.25},{w:224,d:33,s:0.38},
+      {w:108,d:17,s:0.22},{w:184,d:29,s:0.33},{w:76,d:12,s:0.45},{w:156,d:25,s:0.27},
+      {w:204,d:32,s:0.36},{w:72,d:13,s:0.24}
+    ];
+    function renderAwanHeader(){
+      let seg = '';
+      for(const g of POLA_VARIATIF_AWAN){
+        const dep = Math.max(7, Math.round(g.d * 1));
+        seg += 'c -'+Math.round(g.w*g.s)+','+dep+' -'+Math.round(g.w*(1-g.s))+','+dep+' -'+g.w+',0 ';
+      }
+      const d = 'M0,0 L2880,0 L2880,6 ' + seg + seg + 'L0,0 Z';
+      const el = document.getElementById('pAwan');
+      if (el) el.setAttribute('d', d);
+    }
+    renderAwanHeader();
+  </script>
 
   <!-- APPLICATION BOOTSTRAP (ES6 MODULAR MVC) -->
   <script type="module" src="src/app.js"></script>

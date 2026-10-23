@@ -82,12 +82,12 @@ export class AppController {
     };
 
     document.querySelectorAll('.top-nav-btn').forEach(btn => {
-      btn.className = 'top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white transition-all tactile-btn';
+      btn.className = 'top-nav-btn flex items-center space-x-1.5 px-3.5 lg:px-4 py-2 rounded-full font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white/70 transition-all tactile-btn';
     });
 
     const activeTopBtn = document.getElementById(navMap[viewId]);
     if (activeTopBtn) {
-      activeTopBtn.className = 'top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-black text-xs lg:text-sm text-[#00838f] bg-[#e0f7fa] border border-cyan-200/80 shadow-xs transition-all tactile-btn';
+      activeTopBtn.className = 'top-nav-btn flex items-center space-x-1.5 px-3.5 lg:px-4 py-2 rounded-full font-bold text-xs lg:text-sm text-[#0284c7] bg-white shadow-xs transition-all tactile-btn';
     }
 
     // Fallback support untuk Sidebar jika masih ada
@@ -132,7 +132,52 @@ export class AppController {
     }
   }
 
+  setUserMode(mode) {
+    sound.playPop();
+    globalState.setUserMode(mode);
+    if (this.currentViewId === 'viewHome' && this.views.viewHome) {
+      const mainContainer = document.getElementById('mainViewport');
+      if (mainContainer) {
+        this.views.viewHome.render(mainContainer);
+        if (window.lucide) window.lucide.createIcons();
+      }
+    }
+  }
+
   updateHeaderStats(state) {
+    // Update active state Mode Switcher di Header (SD vs SMP)
+    const isSD = (state.userMode !== 'smp');
+    const btnSD = document.getElementById('btnModeSD');
+    const btnSMP = document.getElementById('btnModeSMP');
+    if (btnSD && btnSMP) {
+      if (isSD) {
+        btnSD.className = 'px-2.5 sm:px-3.5 lg:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black transition-all tactile-btn flex items-center space-x-1 sm:space-x-1.5 bg-[#fbbf24] text-slate-900 shadow-xs';
+        btnSMP.className = 'px-2.5 sm:px-3.5 lg:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black transition-all tactile-btn flex items-center space-x-1 sm:space-x-1.5 text-slate-500 hover:text-slate-800';
+      } else {
+        btnSD.className = 'px-2.5 sm:px-3.5 lg:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black transition-all tactile-btn flex items-center space-x-1 sm:space-x-1.5 text-slate-500 hover:text-slate-800';
+        btnSMP.className = 'px-2.5 sm:px-3.5 lg:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black transition-all tactile-btn flex items-center space-x-1 sm:space-x-1.5 bg-indigo-900 text-white shadow-xs';
+      }
+    }
+
+    // Update Widget Gamifikasi di Header Kanan
+    const headerPtsEl = document.getElementById('headerEcoPoints');
+    if (headerPtsEl) headerPtsEl.textContent = state.ecoPoints;
+
+    const headerLevelEl = document.getElementById('headerUserLevel');
+    if (headerLevelEl) headerLevelEl.textContent = state.userLevel;
+
+    const headerModeEl = document.getElementById('headerUserModeBadge');
+    if (headerModeEl) {
+      if (state.userMode === 'smp') {
+        headerModeEl.textContent = 'SMP • Riset';
+        headerModeEl.className = 'text-[9px] font-black tracking-wide text-indigo-800 bg-indigo-100/90 px-1.5 py-0.5 rounded leading-none inline-block';
+      } else {
+        headerModeEl.textContent = 'SD • Cilik';
+        headerModeEl.className = 'text-[9px] font-black tracking-wide text-cyan-800 bg-cyan-100/80 px-1.5 py-0.5 rounded leading-none inline-block';
+      }
+    }
+
+    // Fallback elemen lama (jika ada di komponen lain)
     const tempEl = document.getElementById('earthTempDisplay');
     if (tempEl) tempEl.textContent = `+${state.earthTemp.toFixed(2)}°C`;
 
@@ -158,6 +203,28 @@ export class AppController {
     document.getElementById('topNavTamanAksi')?.addEventListener('click', () => this.switchView('viewTamanAksi'));
     document.getElementById('topNavMisi')?.addEventListener('click', () => this.switchView('viewMisiPahlawan'));
     document.getElementById('topBrandLogo')?.addEventListener('click', () => this.switchView('viewHome'));
+
+    // Mode Switcher Header (Target Belajar Siswa: SD vs SMP)
+    document.getElementById('btnModeSD')?.addEventListener('click', () => {
+      this.setUserMode('sd');
+    });
+    document.getElementById('btnModeSMP')?.addEventListener('click', () => {
+      this.setUserMode('smp');
+    });
+
+    // WonderLearn Header Action Buttons
+    document.getElementById('btnHeaderJoin')?.addEventListener('click', () => {
+      sound.playFanfare();
+      this.switchView('viewMisiPahlawan');
+    });
+    document.getElementById('btnHeaderLogin')?.addEventListener('click', () => {
+      sound.playPop();
+      document.getElementById('infoModal')?.classList.remove('hidden');
+    });
+    document.getElementById('btnNavSearch')?.addEventListener('click', () => {
+      sound.playPop();
+      SpeechHelper.speak('Ayo jelajahi topik iklim di bawah atau pilih game kesukaanmu!');
+    });
 
     // Tombol Navigasi Footer
     document.getElementById('footerNavHome')?.addEventListener('click', () => this.switchView('viewHome'));
