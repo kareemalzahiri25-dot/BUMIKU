@@ -15,17 +15,6 @@ export class HomeView {
         <!-- HERO BANNER DENGAN MASKOT TERRA ASLI -->
         <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-100 via-teal-50 to-sky-100 p-6 lg:p-8 border border-emerald-200/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
           <div class="relative z-10 max-w-xl space-y-3 text-center md:text-left">
-            <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
-              <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/95 text-xs font-black text-emerald-800 shadow-xs">
-                <span>🌍</span>
-                <span>SDG 13: Aksi Penanganan Iklim</span>
-              </span>
-              <span class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-teal-100/90 text-[11px] font-black text-teal-900">
-                <span>📚</span>
-                <span>SDG 4: Edukasi Inovatif 5–15 Tahun</span>
-              </span>
-            </div>
-
             <h2 class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight leading-tight">
               Selamatkan Rumah Kita: Bumi Sedang Demam!
             </h2>
