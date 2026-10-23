@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BumiKita — Pahlawan Cilik Penjaga Iklim (SDG 4 & SDG 13)</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Nunito & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --color-primary: #0097a7;
+      --color-primary-hover: #00838f;
+      --color-primary-subtle: #e0f7fa;
+      --color-eco-green: #10b981;
+      --color-secondary: #f59e0b;
+    }
+
+    body {
+      font-family: 'Nunito', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: #f1f5f9;
+      color: #1e293b;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .tnum {
+      font-feature-settings: "tnum";
+      font-variant-numeric: tabular-nums;
+    }
+
+    @keyframes gentle-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes float-wiggle {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: rotate(2deg); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(16, 185, 129, 0)); }
+      50% { transform: scale(1.06); filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.45)); }
+    }
+
+    .animate-gentle-bounce {
+      animation: gentle-bounce 2.6s ease-in-out infinite;
+    }
+
+    .animate-float-wiggle {
+      animation: float-wiggle 3.2s ease-in-out infinite;
+    }
+
+    .animate-pulse-glow {
+      animation: pulse-glow 2.2s ease-in-out infinite;
+    }
+
+    .tactile-btn {
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tactile-btn:active {
+      transform: scale(0.96);
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#f1f5f9] flex flex-col antialiased">
+
+  <!-- MAIN APP WRAPPER -->
+  <div class="flex-1 flex w-full max-w-[1560px] mx-auto overflow-hidden bg-[#f8fafc] md:shadow-xl md:my-3 md:rounded-3xl border border-slate-200/80">
+
+    <!-- DESKTOP / TABLET SIDEBAR NAVIGATION -->
+    <aside id="sidebar" class="hidden md:flex flex-col w-64 lg:w-72 bg-white border-r border-slate-200/70 p-5 justify-between shrink-0">
+      <div class="space-y-6">
+        
+        <!-- Brand Logo with Terra Avatar & SDG Badges -->
+        <div id="sideBrandLogo" class="flex items-center space-x-3 px-2 cursor-pointer">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-1 flex items-center justify-center text-white shadow-md shadow-emerald-900/15 overflow-hidden">
+            <img src="public/images/characters/terra_turnaround_front.png" alt="BumiKita Terra" class="w-full h-full object-contain" />
+          </div>
+          <div>
+            <div class="flex items-center space-x-1.5">
+              <span class="text-lg font-black tracking-tight text-slate-800">BumiKita</span>
+              <span class="text-[9px] font-black text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded-full">SDG 13</span>
+            </div>
+            <p class="text-[11px] font-bold text-slate-400">Pahlawan Iklim Cilik</p>
+          </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="space-y-1.5">
+          <button id="sideNavHome" class="side-nav-btn w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl font-black text-sm text-[#0097a7] bg-[#e0f7fa] transition-all tactile-btn">
+            <i data-lucide="home" class="w-5 h-5"></i>
+            <span>Beranda Misi</span>
+          </button>
+
+          <button id="sideNavKenali" class="side-nav-btn w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-all tactile-btn">
+            <i data-lucide="book-open" class="w-5 h-5"></i>
+            <span>1. Kenali Bumi</span>
+          </button>
+
+          <button id="sideNavTamanAksi" class="side-nav-btn w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-all tactile-btn relative">
+            <i data-lucide="sparkles" class="w-5 h-5 text-emerald-600"></i>
+            <span>2. Taman Aksi Hijau</span>
+            <span class="absolute right-3 w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          </button>
+
+          <button id="sideNavMisi" class="side-nav-btn w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-all tactile-btn">
+            <i data-lucide="award" class="w-5 h-5"></i>
+            <span>3. Misi Pahlawan</span>
+          </button>
+        </nav>
+
+        <!-- Target SDG 4 & 13 Mini Box -->
+        <div class="bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 border border-emerald-200/70 rounded-3xl p-4 text-center relative overflow-hidden space-y-2">
+          <div class="flex justify-center space-x-2">
+            <span class="text-[10px] font-black bg-rose-500 text-white px-2 py-0.5 rounded-md">SDG 4: Edukasi</span>
+            <span class="text-[10px] font-black bg-emerald-600 text-white px-2 py-0.5 rounded-md">SDG 13: Iklim</span>
+          </div>
+          <h4 class="text-xs font-black text-slate-800">Target Hari Ini</h4>
+          <p class="text-[11px] font-semibold text-slate-600">Bersihkan taman kota dan turunkan suhu bumi!</p>
+        </div>
+      </div>
+
+      <!-- User Mini Profile Footer -->
+      <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-full bg-emerald-100 border-2 border-white shadow-xs flex items-center justify-center text-lg">
+            🌱
+          </div>
+          <div>
+            <h5 class="text-xs font-black text-slate-800">Pahlawan Iklim</h5>
+            <span class="text-[10px] font-bold text-emerald-600">Level 2 Sahabat Bumi</span>
+          </div>
+        </div>
+        <button id="btnAudioToggle" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center tactile-btn hover:bg-slate-200" title="Audio / Musik">
+          <i data-lucide="volume-2" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN VIEW AREA -->
+    <div class="flex-1 flex flex-col min-w-0 h-[100dvh] md:h-auto overflow-hidden">
+      
+      <!-- TOP APPLICATION BAR -->
+      <header class="h-16 lg:h-20 bg-white border-b border-slate-200/70 px-4 md:px-8 flex items-center justify-between shrink-0 z-20">
+        
+        <!-- Welcome Greeting -->
+        <div class="flex items-center space-x-3">
+          <div class="flex items-center space-x-2">
+            <h1 class="text-base md:text-xl font-black text-slate-800 tracking-tight">Halo, Penjaga Bumi!</h1>
+            <span class="text-lg animate-gentle-bounce inline-block">🌿</span>
+          </div>
+          <p class="hidden xl:block text-xs font-semibold text-slate-400">Ayo bersihkan taman dan turunkan suhu bumi kita hari ini!</p>
+        </div>
+
+        <!-- Real-time Status Indicators -->
+        <div class="flex items-center space-x-2 sm:space-x-3">
+          
+          <!-- Suhu Bumi Indicator -->
+          <div id="earthTempPill" class="bg-rose-50 border border-rose-200 rounded-full px-3 py-1.5 flex items-center space-x-1.5 cursor-pointer tactile-btn" title="Kenaikan Suhu Global">
+            <span class="text-base">🌡️</span>
+            <div>
+              <span id="earthTempDisplay" class="text-xs md:text-sm font-black text-rose-700 tnum">+1.35°C</span>
+              <span class="text-[9px] font-extrabold text-rose-500 uppercase tracking-wider ml-0.5 hidden xl:inline">Suhu</span>
+            </div>
+          </div>
+
+          <!-- Poin Hijau (Eco-Points) -->
+          <div class="bg-emerald-50 border border-emerald-200 rounded-full px-3 py-1.5 flex items-center space-x-1.5 cursor-default" title="Poin Hijau">
+            <span class="text-base animate-pulse-glow">🌿</span>
+            <div>
+              <span id="ecoPointCount" class="text-xs md:text-sm font-black text-emerald-800 tnum">160</span>
+              <span class="text-[9px] font-extrabold text-emerald-600 uppercase tracking-wider ml-0.5 hidden lg:inline">Poin</span>
+            </div>
+          </div>
+
+          <!-- Pohon Ditanam -->
+          <div class="bg-teal-50 border border-teal-200 rounded-full px-3 py-1.5 flex items-center space-x-1.5 cursor-default" title="Pohon & Titik Asri">
+            <span class="text-base">🌳</span>
+            <div>
+              <span id="treeCountDisplay" class="text-xs md:text-sm font-black text-teal-800 tnum">4</span>
+              <span class="text-[9px] font-extrabold text-teal-600 uppercase tracking-wider ml-0.5 hidden lg:inline">Pohon</span>
+            </div>
+          </div>
+
+          <!-- Lencana Pahlawan -->
+          <div class="bg-amber-50 border border-amber-200 rounded-full px-3 py-1.5 flex items-center space-x-1.5 cursor-default" title="Lencana Terbuka">
+            <span class="text-base">🏅</span>
+            <div>
+              <span id="badgeCountDisplay" class="text-xs md:text-sm font-black text-amber-800 tnum">3</span>
+              <span class="text-[9px] font-extrabold text-amber-600 uppercase tracking-wider ml-0.5 hidden lg:inline">Lencana</span>
+            </div>
+          </div>
+
+          <!-- Info Modal Trigger -->
+          <button id="btnInfoModalTrigger" class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 tactile-btn" title="Info SDG 4 & 13">
+            <i data-lucide="info" class="w-4 h-4 md:w-5 md:h-5"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- DYNAMIC MAIN VIEWPORT RENDERED BY MVC VIEWS -->
+      <main id="mainViewport" class="flex-1 overflow-y-auto no-scrollbar p-4 md:p-8 space-y-6 pb-24 md:pb-10">
+        <!-- Rendered by HomeView, KenaliBumiView, TamanAksiView, MisiPahlawanView -->
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- MOBILE BOTTOM BAR NAVIGATION -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-4 py-2.5 flex items-center justify-around z-30 shadow-lg">
+    <button id="mobileNavHome" class="mobile-nav-btn flex flex-col items-center justify-center text-[#0097a7] tactile-btn">
+      <i data-lucide="home" class="w-5 h-5"></i>
+      <span class="text-[10px] font-black mt-0.5">Beranda</span>
+    </button>
+    <button id="mobileNavKenali" class="mobile-nav-btn flex flex-col items-center justify-center text-slate-400 tactile-btn">
+      <i data-lucide="book-open" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold mt-0.5">1. Kenali</span>
+    </button>
+    <button id="mobileNavTamanAksi" class="mobile-nav-btn flex flex-col items-center justify-center text-slate-400 tactile-btn">
+      <i data-lucide="sparkles" class="w-5 h-5 text-emerald-600"></i>
+      <span class="text-[10px] font-bold mt-0.5">2. Taman</span>
+    </button>
+    <button id="mobileNavMisi" class="mobile-nav-btn flex flex-col items-center justify-center text-slate-400 tactile-btn">
+      <i data-lucide="award" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold mt-0.5">3. Misi</span>
+    </button>
+  </nav>
+
+  <!-- INFO MODAL (SDG 4 & SDG 13) -->
+  <div id="infoModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-3xl p-6 md:p-8 max-w-lg w-full space-y-4 shadow-2xl border border-slate-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center space-x-2">
+          <span class="text-2xl">🌍</span>
+          <h3 class="text-base font-black text-slate-800">Tentang Proyek Inovasi BumiKita</h3>
+        </div>
+        <button id="btnCloseInfoModal" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center tactile-btn">
+          ✕
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs md:text-sm font-semibold text-slate-600 leading-relaxed">
+        <p>
+          <strong>Tema Esai:</strong><br>
+          <span class="text-slate-800">Pendidikan Berkualitas di Era Perubahan Iklim: Strategi dan Inovasi Teknologi untuk Generasi Berkelanjutan dalam mendukung SDGs 4&13</span>
+        </p>
+        <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 text-emerald-950 space-y-1">
+          <p class="font-black">Tujuan Utama:</p>
+          <p class="text-xs">
+            Memberdayakan anak usia 5–15 tahun melalui gamifikasi interaktif. Anak memahami bahwa tindakan nyata (memilah sampah, bersepeda, menanam pohon) memiliki dampak langsung mendinginkan suhu bumi.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION BOOTSTRAP (ES6 MODULAR MVC) -->
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
