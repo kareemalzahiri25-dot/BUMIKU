@@ -91,46 +91,47 @@
 
     <!-- TOP APPLICATION NAVBAR -->
     <header class="bg-white border-b border-slate-200/80 sticky top-0 z-40 px-4 lg:px-8 py-3 shrink-0 shadow-xs">
-      <div class="flex items-center justify-between gap-3 lg:gap-6">
+      <div class="flex items-center justify-between gap-4">
         
-        <!-- Left: Brand Logo with Terra Avatar & SDG Badges -->
-        <div id="topBrandLogo" class="flex items-center space-x-3 cursor-pointer shrink-0" title="BumiKita - Kembali ke Beranda">
+        <!-- Left: Brand Logo with Terra Avatar (Clean without SDG badges) -->
+        <div id="topBrandLogo" class="flex items-center space-x-3 cursor-pointer shrink-0 w-auto md:w-56" title="BumiKita - Kembali ke Beranda">
           <div class="w-10 h-10 lg:w-11 lg:h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 flex items-center justify-center text-white shadow-md shadow-emerald-900/15 overflow-hidden">
             <img src="public/images/characters/terra_turnaround_front.png" alt="BumiKita Terra" class="w-full h-full object-contain" />
           </div>
           <div>
-            <div class="flex items-center space-x-1.5">
-              <span class="text-base lg:text-lg font-black tracking-tight text-slate-800">BumiKita</span>
-              <span class="text-[9px] font-black text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded-full">SDG 13</span>
-              <span class="text-[9px] font-black text-rose-700 bg-rose-100 px-1.5 py-0.5 rounded-full hidden sm:inline">SDG 4</span>
-            </div>
-            <p class="text-[10px] lg:text-[11px] font-bold text-slate-400">Pahlawan Cilik Iklim</p>
+            <span class="text-base lg:text-lg font-black tracking-tight text-slate-800 block leading-tight">BumiKita</span>
+            <p class="text-[10px] lg:text-[11px] font-bold text-slate-400 leading-tight">Pahlawan Cilik Iklim</p>
           </div>
         </div>
 
-        <!-- Right: Desktop & Tablet Horizontal Navigation Tabs -->
-        <nav class="hidden md:flex items-center space-x-1.5 lg:space-x-2 bg-slate-50/80 p-1.5 rounded-2xl border border-slate-200/60">
-          <button id="topNavHome" class="top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-black text-xs lg:text-sm text-[#00838f] bg-[#e0f7fa] border border-cyan-200/80 shadow-xs transition-all tactile-btn">
-            <i data-lucide="home" class="w-4 h-4"></i>
-            <span>Beranda Misi</span>
-          </button>
+        <!-- Center: Centered Desktop & Tablet Horizontal Navigation Tabs -->
+        <div class="hidden md:flex flex-1 justify-center">
+          <nav class="flex items-center space-x-1.5 lg:space-x-2 bg-slate-50/80 p-1.5 rounded-2xl border border-slate-200/60 shadow-2xs">
+            <button id="topNavHome" class="top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-black text-xs lg:text-sm text-[#00838f] bg-[#e0f7fa] border border-cyan-200/80 shadow-xs transition-all tactile-btn">
+              <i data-lucide="home" class="w-4 h-4"></i>
+              <span>Beranda Misi</span>
+            </button>
 
-          <button id="topNavKenali" class="top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white transition-all tactile-btn">
-            <i data-lucide="book-open" class="w-4 h-4"></i>
-            <span>1. Kenali Bumi</span>
-          </button>
+            <button id="topNavKenali" class="top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white transition-all tactile-btn">
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+              <span>1. Kenali Bumi</span>
+            </button>
 
-          <button id="topNavTamanAksi" class="top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white transition-all tactile-btn relative">
-            <i data-lucide="sparkles" class="w-4 h-4 text-emerald-600"></i>
-            <span>2. Taman Aksi Hijau</span>
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          </button>
+            <button id="topNavTamanAksi" class="top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white transition-all tactile-btn relative">
+              <i data-lucide="sparkles" class="w-4 h-4 text-emerald-600"></i>
+              <span>2. Taman Aksi Hijau</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            </button>
 
-          <button id="topNavMisi" class="top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white transition-all tactile-btn">
-            <i data-lucide="award" class="w-4 h-4"></i>
-            <span>3. Misi Pahlawan</span>
-          </button>
-        </nav>
+            <button id="topNavMisi" class="top-nav-btn flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-xl font-bold text-xs lg:text-sm text-slate-600 hover:text-slate-900 hover:bg-white transition-all tactile-btn">
+              <i data-lucide="award" class="w-4 h-4"></i>
+              <span>3. Misi Pahlawan</span>
+            </button>
+          </nav>
+        </div>
+
+        <!-- Right: Spacer to keep Center perfectly centered -->
+        <div class="hidden md:block w-56 shrink-0"></div>
 
       </div>
     </header>
@@ -155,11 +156,7 @@
                   <img src="public/images/characters/terra_turnaround_front.png" alt="BumiKita Terra" class="w-full h-full object-contain" />
                 </div>
                 <div>
-                  <div class="flex items-center space-x-2">
-                    <span class="text-base font-black text-slate-800">BumiKita</span>
-                    <span class="text-[10px] font-black text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">SDG 13</span>
-                    <span class="text-[10px] font-black text-rose-800 bg-rose-100 px-2 py-0.5 rounded-full">SDG 4</span>
-                  </div>
+                  <span class="text-base font-black text-slate-800 block">BumiKita</span>
                   <p class="text-xs font-bold text-slate-400">Pahlawan Cilik Penjaga Iklim</p>
                 </div>
               </div>
