@@ -82,44 +82,9 @@ export class HomeView {
       </div>
 
       <!-- ========================================================
-           TRUST BADGES BAR (WonderLearn Pill Strip)
-      ======================================================== -->
-      <div class="max-w-4xl mx-auto mt-6 md:mt-8 relative z-20 px-2">
-        <div class="bg-white rounded-2xl md:rounded-full p-3 sm:py-3.5 sm:px-6 shadow-xl border border-sky-100 grid grid-cols-2 md:flex md:flex-wrap items-center justify-around gap-2.5 sm:gap-4 text-slate-700 text-[11px] sm:text-xs md:text-sm font-black">
-          
-          <div class="flex items-center space-x-1.5 sm:space-x-2">
-            <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs sm:text-sm shrink-0">🛡️</span>
-            <span>100% Aman & Bebas Iklan</span>
-          </div>
-
-          <div class="hidden md:inline text-slate-300">•</div>
-
-          <div class="flex items-center space-x-1.5 sm:space-x-2">
-            <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs sm:text-sm shrink-0">⭐</span>
-            <span>Kurikulum SDG 4 & 13</span>
-          </div>
-
-          <div class="hidden md:inline text-slate-300">•</div>
-
-          <div class="flex items-center space-x-1.5 sm:space-x-2">
-            <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-xs sm:text-sm shrink-0">🎮</span>
-            <span>Belajar Lewat Bermain</span>
-          </div>
-
-          <div class="hidden md:inline text-slate-300">•</div>
-
-          <div class="flex items-center space-x-1.5 sm:space-x-2">
-            <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center text-xs sm:text-sm shrink-0">❤️</span>
-            <span>Untuk Usia 5–15 Tahun</span>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- ========================================================
            EXPLORE BY TOPIC (WonderLearn Pastel Squircles + Awa Mascot)
       ======================================================== -->
-      <div class="space-y-6 pt-4">
+      <div class="space-y-6 pt-4 sm:pt-6">
         
         <div class="text-center space-y-1">
           <div class="inline-flex items-center space-x-2 text-amber-500 font-extrabold text-xs uppercase tracking-widest">
