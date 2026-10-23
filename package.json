@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "serve .",
-    "dev": "serve . -l 3000"
+    "dev": "serve . -l 3000",
+    "deploy": "wrangler deploy"
   },
   "devDependencies": {
     "serve": "^14.2.4"
