@@ -1,5 +1,5 @@
 {
-  "name": "bumiku",
+  "name": "bumikita-sdg4-sdg13",
   "version": "1.0.0",
   "description": "Media Pembelajaran Interaktif Iklim untuk Anak Usia 5-15 Tahun (SDG 4 & SDG 13) berbasis Modular MVC",
   "main": "index.html",
@@ -20,6 +20,6 @@
     "gamification",
     "mvc"
   ],
-  "author": "BUMIKU Team",
+  "author": "BumiKita Team",
   "license": "MIT"
 }
