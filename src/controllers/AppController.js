@@ -1,7 +1,7 @@
 /**
  * AppController.js
  * Koordinator utama aplikasi SPA BumiKita berbasis arsitektur MVC.
- * Mengatur routing navigasi view, sinkronisasi state global ke header, dan inisialisasi aplikasi.
+ * Mengatur routing navigasi view, sinkronisasi state global, dan inisialisasi aplikasi.
  */
 import { globalState } from '../models/StateModel.js';
 import { sound } from '../utils/AudioSynth.js';
@@ -18,13 +18,32 @@ export class AppController {
   }
 
   init() {
-    // Berlangganan perubahan globalState untuk update header secara reaktif
+    // Render efek awan header dinamis
+    this.renderAwanHeader();
+
+    // Berlangganan perubahan globalState untuk update status secara reaktif
     globalState.subscribe(state => this.updateHeaderStats(state));
 
     // Render tampilan awal
     this.updateHeaderStats(globalState.getState());
     this.bindGlobalEvents();
     this.switchView('viewHome');
+  }
+
+  renderAwanHeader() {
+    const POLA_VARIATIF_AWAN = [
+      { w: 176, d: 28, s: 0.30 }, { w: 92, d: 15, s: 0.42 }, { w: 148, d: 23, s: 0.25 }, { w: 224, d: 33, s: 0.38 },
+      { w: 108, d: 17, s: 0.22 }, { w: 184, d: 29, s: 0.33 }, { w: 76, d: 12, s: 0.45 }, { w: 156, d: 25, s: 0.27 },
+      { w: 204, d: 32, s: 0.36 }, { w: 72, d: 13, s: 0.24 }
+    ];
+    let seg = '';
+    for (const g of POLA_VARIATIF_AWAN) {
+      const dep = Math.max(7, Math.round(g.d * 1));
+      seg += 'c -' + Math.round(g.w * g.s) + ',' + dep + ' -' + Math.round(g.w * (1 - g.s)) + ',' + dep + ' -' + g.w + ',0 ';
+    }
+    const d = 'M0,0 L2880,0 L2880,6 ' + seg + seg + 'L0,0 Z';
+    const el = document.getElementById('pAwan');
+    if (el) el.setAttribute('d', d);
   }
 
   switchView(viewId) {
@@ -38,7 +57,7 @@ export class AppController {
     scrollContainer.scrollTop = 0;
 
     // Header, Footer, dan Mobile Bottom Bar hanya ditampilkan di Beranda (viewHome).
-    // Saat membuka modul lain (Kenali Bumi, Taman Aksi, Misi), sembunyikan agar halaman fokus dan menggunakan tombol kembali (back button).
+    // Saat membuka modul lain (Kenali Bumi, Taman Aksi, Misi), sembunyikan agar fokus dan menggunakan tombol kembali.
     const isHome = (viewId === 'viewHome');
     const appHeader = document.querySelector('header');
     const appFooter = document.getElementById('appFooter');
@@ -90,23 +109,6 @@ export class AppController {
       activeTopBtn.className = 'top-nav-btn flex items-center space-x-1.5 px-3.5 lg:px-4 py-2 rounded-full font-bold text-xs lg:text-sm text-[#0284c7] bg-white shadow-xs transition-all tactile-btn';
     }
 
-    // Fallback support untuk Sidebar jika masih ada
-    const sideMap = {
-      viewHome: 'sideNavHome',
-      viewKenaliBumi: 'sideNavKenali',
-      viewTamanAksi: 'sideNavTamanAksi',
-      viewMisiPahlawan: 'sideNavMisi'
-    };
-
-    document.querySelectorAll('.side-nav-btn').forEach(btn => {
-      btn.className = 'side-nav-btn w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-all tactile-btn';
-    });
-
-    const activeSideBtn = document.getElementById(sideMap[viewId]);
-    if (activeSideBtn) {
-      activeSideBtn.className = 'side-nav-btn w-full flex items-center space-x-3.5 px-4 py-3 rounded-2xl font-black text-sm text-[#0097a7] bg-[#e0f7fa] transition-all tactile-btn shadow-xs';
-    }
-
     // Update active state di Bottom Nav Mobile
     const mobileMap = {
       viewHome: 'mobileNavHome',
@@ -132,63 +134,12 @@ export class AppController {
     }
   }
 
-  setUserMode(mode) {
-    sound.playPop();
-    globalState.setUserMode(mode);
-    if (this.currentViewId === 'viewHome' && this.views.viewHome) {
-      const mainContainer = document.getElementById('mainViewport');
-      if (mainContainer) {
-        this.views.viewHome.render(mainContainer);
-        if (window.lucide) window.lucide.createIcons();
-      }
-    }
-  }
-
   updateHeaderStats(state) {
-    // Update active state Mode Switcher di Header (SD vs SMP)
-    const isSD = (state.userMode !== 'smp');
-    const btnSD = document.getElementById('btnModeSD');
-    const btnSMP = document.getElementById('btnModeSMP');
-    if (btnSD && btnSMP) {
-      if (isSD) {
-        btnSD.className = 'px-2.5 sm:px-3.5 lg:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black transition-all tactile-btn flex items-center space-x-1 sm:space-x-1.5 bg-[#fbbf24] text-slate-900 shadow-xs';
-        btnSMP.className = 'px-2.5 sm:px-3.5 lg:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black transition-all tactile-btn flex items-center space-x-1 sm:space-x-1.5 text-slate-500 hover:text-slate-800';
-      } else {
-        btnSD.className = 'px-2.5 sm:px-3.5 lg:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black transition-all tactile-btn flex items-center space-x-1 sm:space-x-1.5 text-slate-500 hover:text-slate-800';
-        btnSMP.className = 'px-2.5 sm:px-3.5 lg:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black transition-all tactile-btn flex items-center space-x-1 sm:space-x-1.5 bg-indigo-900 text-white shadow-xs';
-      }
+    // Sinkronkan status level pengguna di footer
+    const footerLevelEl = document.getElementById('footerUserLevel');
+    if (footerLevelEl) {
+      footerLevelEl.textContent = state.userLevel;
     }
-
-    // Update Widget Gamifikasi di Header Kanan
-    const headerPtsEl = document.getElementById('headerEcoPoints');
-    if (headerPtsEl) headerPtsEl.textContent = state.ecoPoints;
-
-    const headerLevelEl = document.getElementById('headerUserLevel');
-    if (headerLevelEl) headerLevelEl.textContent = state.userLevel;
-
-    const headerModeEl = document.getElementById('headerUserModeBadge');
-    if (headerModeEl) {
-      if (state.userMode === 'smp') {
-        headerModeEl.textContent = 'SMP • Riset';
-        headerModeEl.className = 'text-[9px] font-black tracking-wide text-indigo-800 bg-indigo-100/90 px-1.5 py-0.5 rounded leading-none inline-block';
-      } else {
-        headerModeEl.textContent = 'SD • Cilik';
-        headerModeEl.className = 'text-[9px] font-black tracking-wide text-cyan-800 bg-cyan-100/80 px-1.5 py-0.5 rounded leading-none inline-block';
-      }
-    }
-
-    // Fallback elemen lama (jika ada di komponen lain)
-    const tempEl = document.getElementById('earthTempDisplay');
-    if (tempEl) tempEl.textContent = `+${state.earthTemp.toFixed(2)}°C`;
-
-    const ptsEl = document.getElementById('ecoPointCount');
-    if (ptsEl) ptsEl.textContent = state.ecoPoints;
-
-    const treesEl = document.getElementById('treeCountDisplay');
-    if (treesEl) treesEl.textContent = state.treesCount;
-
-    const badgesEl = document.getElementById('badgeCountDisplay');
-    if (badgesEl) badgesEl.textContent = state.badges.length;
 
     // Jika View Home sedang aktif, perbarui pula statistiknya
     if (this.currentViewId === 'viewHome' && this.views.viewHome) {
@@ -204,28 +155,6 @@ export class AppController {
     document.getElementById('topNavMisi')?.addEventListener('click', () => this.switchView('viewMisiPahlawan'));
     document.getElementById('topBrandLogo')?.addEventListener('click', () => this.switchView('viewHome'));
 
-    // Mode Switcher Header (Target Belajar Siswa: SD vs SMP)
-    document.getElementById('btnModeSD')?.addEventListener('click', () => {
-      this.setUserMode('sd');
-    });
-    document.getElementById('btnModeSMP')?.addEventListener('click', () => {
-      this.setUserMode('smp');
-    });
-
-    // WonderLearn Header Action Buttons
-    document.getElementById('btnHeaderJoin')?.addEventListener('click', () => {
-      sound.playFanfare();
-      this.switchView('viewMisiPahlawan');
-    });
-    document.getElementById('btnHeaderLogin')?.addEventListener('click', () => {
-      sound.playPop();
-      document.getElementById('infoModal')?.classList.remove('hidden');
-    });
-    document.getElementById('btnNavSearch')?.addEventListener('click', () => {
-      sound.playPop();
-      SpeechHelper.speak('Ayo jelajahi topik iklim di bawah atau pilih game kesukaanmu!');
-    });
-
     // Tombol Navigasi Footer
     document.getElementById('footerNavHome')?.addEventListener('click', () => this.switchView('viewHome'));
     document.getElementById('footerNavKenali')?.addEventListener('click', () => this.switchView('viewKenaliBumi'));
@@ -238,46 +167,13 @@ export class AppController {
       document.getElementById('infoModal')?.classList.remove('hidden');
     });
 
-    // Fallback Tombol Navigasi Desktop Sidebar (jika ada)
-    document.getElementById('sideNavHome')?.addEventListener('click', () => this.switchView('viewHome'));
-    document.getElementById('sideNavKenali')?.addEventListener('click', () => this.switchView('viewKenaliBumi'));
-    document.getElementById('sideNavTamanAksi')?.addEventListener('click', () => this.switchView('viewTamanAksi'));
-    document.getElementById('sideNavMisi')?.addEventListener('click', () => this.switchView('viewMisiPahlawan'));
-    document.getElementById('sideBrandLogo')?.addEventListener('click', () => this.switchView('viewHome'));
-
     // Tombol Navigasi Mobile
     document.getElementById('mobileNavHome')?.addEventListener('click', () => this.switchView('viewHome'));
     document.getElementById('mobileNavKenali')?.addEventListener('click', () => this.switchView('viewKenaliBumi'));
     document.getElementById('mobileNavTamanAksi')?.addEventListener('click', () => this.switchView('viewTamanAksi'));
     document.getElementById('mobileNavMisi')?.addEventListener('click', () => this.switchView('viewMisiPahlawan'));
 
-    // Mute Audio Toggle
-    document.getElementById('btnAudioToggle')?.addEventListener('click', () => {
-      const isMuted = sound.toggleMute();
-      const btn = document.getElementById('btnAudioToggle');
-      if (btn) {
-        btn.innerHTML = isMuted
-          ? '<i data-lucide="volume-x" class="w-4 h-4 text-rose-500"></i>'
-          : '<i data-lucide="volume-2" class="w-4 h-4 text-slate-600"></i>';
-        if (window.lucide) window.lucide.createIcons();
-      }
-    });
-
-    // Peringatan Suhu Global
-    document.getElementById('earthTempPill')?.addEventListener('click', () => {
-      sound.playPop();
-      const state = globalState.getState();
-      SpeechHelper.speak(
-        `Suhu bumi rata-rata saat ini naik positif ${state.earthTemp.toFixed(2)} derajat Celsius. Ayo kita turunkan lewat aksi ramah lingkungan!`
-      );
-    });
-
     // Modal Info SDG 4 & 13
-    document.getElementById('btnInfoModalTrigger')?.addEventListener('click', () => {
-      sound.playPop();
-      document.getElementById('infoModal')?.classList.toggle('hidden');
-    });
-
     document.getElementById('btnCloseInfoModal')?.addEventListener('click', () => {
       sound.playPop();
       document.getElementById('infoModal')?.classList.add('hidden');

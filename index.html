@@ -180,19 +180,8 @@
           </nav>
         </div>
 
-        <!-- Right: Target Belajar Siswa Mode Switcher (SD vs SMP) -->
-        <div class="flex items-center justify-end shrink-0">
-          <div class="inline-flex p-0.5 sm:p-1 bg-slate-100/90 rounded-full border border-slate-200/60 shadow-2xs whitespace-nowrap" title="Target Belajar Siswa: Pilih mode tampilan">
-            <button id="btnModeSD" class="px-2.5 sm:px-3.5 lg:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black transition-all tactile-btn flex items-center space-x-1 sm:space-x-1.5 bg-[#fbbf24] text-slate-900 shadow-xs">
-              <span>🌱</span>
-              <span>Penjelajah</span>
-            </button>
-            <button id="btnModeSMP" class="px-2.5 sm:px-3.5 lg:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black transition-all tactile-btn flex items-center space-x-1 sm:space-x-1.5 text-slate-500 hover:text-slate-800">
-              <span>🔬</span>
-              <span>Peneliti</span>
-            </button>
-          </div>
-        </div>
+        <!-- Right: Spacer untuk keseimbangan navbar tengah desktop -->
+        <div class="hidden md:block shrink-0 w-24 lg:w-32 pointer-events-none" aria-hidden="true"></div>
 
       </div>
 
@@ -328,7 +317,7 @@
             <div class="flex items-center space-x-3 text-[11px] font-bold text-teal-200">
               <span class="flex items-center space-x-1">
                 <span>🌱</span>
-                <span>Level 2 Sahabat Bumi</span>
+                <span id="footerUserLevel">Level 2 Sahabat Bumi</span>
               </span>
               <span>•</span>
               <span class="text-yellow-300">Aplikasi Terbuka & Ramah Anak</span>
@@ -388,26 +377,6 @@
       </div>
     </div>
   </div>
-
-  <!-- SCRIPT GENERATOR AWAN GELOMBANG VARIATIF HEADER -->
-  <script>
-    const POLA_VARIATIF_AWAN = [
-      {w:176,d:28,s:0.30},{w:92,d:15,s:0.42},{w:148,d:23,s:0.25},{w:224,d:33,s:0.38},
-      {w:108,d:17,s:0.22},{w:184,d:29,s:0.33},{w:76,d:12,s:0.45},{w:156,d:25,s:0.27},
-      {w:204,d:32,s:0.36},{w:72,d:13,s:0.24}
-    ];
-    function renderAwanHeader(){
-      let seg = '';
-      for(const g of POLA_VARIATIF_AWAN){
-        const dep = Math.max(7, Math.round(g.d * 1));
-        seg += 'c -'+Math.round(g.w*g.s)+','+dep+' -'+Math.round(g.w*(1-g.s))+','+dep+' -'+g.w+',0 ';
-      }
-      const d = 'M0,0 L2880,0 L2880,6 ' + seg + seg + 'L0,0 Z';
-      const el = document.getElementById('pAwan');
-      if (el) el.setAttribute('d', d);
-    }
-    renderAwanHeader();
-  </script>
 
   <!-- APPLICATION BOOTSTRAP (ES6 MODULAR MVC) -->
   <script type="module" src="src/app.js"></script>

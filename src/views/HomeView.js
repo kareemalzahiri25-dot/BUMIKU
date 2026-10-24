@@ -18,13 +18,9 @@ export class HomeView {
   }
 
   render(container) {
-    const state = globalState.getState();
-    const isSD = (state.userMode !== 'smp');
-    const progressPct = globalState.getProgressPercent();
-
     container.innerHTML = `
       <section class="space-y-8 md:space-y-12">
-        ${isSD ? this.renderSdMode(state, progressPct) : this.renderSmpMode(state, progressPct)}
+        ${this.renderSdMode()}
       </section>
     `;
 
@@ -33,9 +29,9 @@ export class HomeView {
   }
 
   /**
-   * RENDER TAMPILAN MODE SD (WONDERLEARN AESTHETIC - PENJELAJAH CILIK)
+   * RENDER TAMPILAN BERANDA (WONDERLEARN AESTHETIC - PENJELAJAH CILIK)
    */
-  renderSdMode(state, progressPct) {
+  renderSdMode() {
     return `
       <!-- ========================================================
            HERO SECTION: WONDERLEARN 3D PANORAMA OBSERVATORY
@@ -530,136 +526,12 @@ export class HomeView {
   }
 
   /**
-   * RENDER TAMPILAN MODE SMP (PENELITI MUDA)
-   */
-  renderSmpMode(state, progressPct) {
-    const pointsToNext = Math.max(0, state.nextLevelPoints - state.ecoPoints);
-
-    return `
-      <!-- HERO BANNER SMP: DASHBOARD SAINS IKLIM -->
-      <div class="bg-slate-900 text-white -mt-3 sm:-mt-5 md:-mt-8 -mx-3 sm:-mx-5 md:-mx-8 rounded-b-3xl md:rounded-b-[40px] p-6 lg:p-8 pt-10 md:pt-14 border-b border-slate-800 shadow-xl space-y-6">
-        
-        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-          <div class="space-y-2 max-w-xl">
-            <div class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-indigo-900/80 text-indigo-300 font-mono text-[11px] border border-indigo-700/60">
-              <span>●</span>
-              <span>Stasiun Observasi Iklim BumiKita — Tingkat SMP</span>
-            </div>
-            <h2 class="text-2xl lg:text-3xl font-black tracking-tight leading-tight">
-              Investigasi Dinamika Karbon & Dekarbonisasi Kota
-            </h2>
-            <p class="text-xs md:text-sm font-medium text-slate-400 leading-relaxed">
-              Menganalisis anomali suhu troposfer, efisiensi penyerapan karbon oleh RTH, dan simulasi aksi dekarbonisasi berbasis kalkulasi data riil.
-            </p>
-          </div>
-
-          <!-- WIDGET INDIKATOR ANOMALI SUHU -->
-          <div class="bg-slate-800/90 rounded-2xl p-4 border border-slate-700 shrink-0 w-full lg:w-72 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Anomali Termal</span>
-              <span class="text-[10px] font-black px-2 py-0.5 rounded-full ${state.earthTemp > 1.2 ? 'bg-rose-900/80 text-rose-300 border border-rose-700' : 'bg-amber-900/80 text-amber-300 border border-amber-700'}">
-                ${state.earthTemp > 1.2 ? 'Kritis' : 'Waspada'}
-              </span>
-            </div>
-            <div class="flex items-baseline space-x-2">
-              <span class="text-3xl font-black font-mono text-rose-400 tnum">+${state.earthTemp.toFixed(2)}°C</span>
-              <span class="text-xs text-slate-400">vs Pra-Industri</span>
-            </div>
-            <div class="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
-              <div class="bg-gradient-to-r from-amber-400 to-rose-500 h-full rounded-full" style="width: ${Math.min(100, (state.earthTemp / 2.0) * 100)}%"></div>
-            </div>
-            <p class="text-[10px] text-slate-400 italic">Batas ambang aman IPCC: di bawah +1.50°C</p>
-          </div>
-        </div>
-
-        <div class="pt-4 border-t border-slate-800 flex flex-wrap gap-3">
-          <button id="btnHeroSmpSim" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-bold text-xs flex items-center space-x-2 shadow tactile-btn">
-            <i data-lucide="sliders" class="w-4 h-4"></i>
-            <span>Buka Laboratorium Sains Kenali Bumi</span>
-          </button>
-          <button id="btnSmpSimTaman" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-5 py-2.5 rounded-xl font-bold text-xs flex items-center space-x-2 border border-slate-700 tactile-btn">
-            <i data-lucide="trees" class="w-4 h-4 text-emerald-400"></i>
-            <span>Simulasi Taman Dekarbonisasi</span>
-          </button>
-        </div>
-
-      </div>
-
-      <!-- 3 PINTU UTAMA MODUL (SMP) -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div id="cardKenaliBumi" class="bg-white hover:bg-slate-50 rounded-3xl p-5 flex flex-col justify-between cursor-pointer border-2 border-slate-200 hover:border-cyan-500 shadow-sm tactile-btn">
-          <div class="flex items-start justify-between">
-            <div class="w-12 h-12 rounded-2xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-2xl">
-              🌡️
-            </div>
-            <span class="text-[10px] font-black text-cyan-800 bg-cyan-100 px-2.5 py-1 rounded-full">Fase 1: Sains</span>
-          </div>
-          <div class="my-3">
-            <h4 class="text-base font-black text-slate-900 font-display">1. Termodinamika & GRK</h4>
-            <p class="text-xs font-semibold text-slate-500 mt-1">
-              Pelajari radiasi gelombang panjang, ketebalan gas rumah kaca, dan albedo kutub.
-            </p>
-          </div>
-          <span class="text-xs font-black text-cyan-800 flex items-center space-x-1">
-            <span>Buka Laboratorium Sains &rarr;</span>
-          </span>
-        </div>
-
-        <div id="cardTamanAksi" class="bg-white hover:bg-slate-50 rounded-3xl p-5 flex flex-col justify-between cursor-pointer border-2 border-emerald-200 hover:border-emerald-500 shadow-sm tactile-btn">
-          <div class="flex items-start justify-between">
-            <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-2xl">
-              🌳
-            </div>
-            <span class="text-[10px] font-black text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-full">Fase 2: Aksi</span>
-          </div>
-          <div class="my-3">
-            <h4 class="text-base font-black text-slate-900 font-display">2. Rekayasa RTH Kota</h4>
-            <p class="text-xs font-semibold text-slate-500 mt-1">
-              Simulasi intervensi penanaman vegetasi dan eliminasi sumber polusi perkotaan.
-            </p>
-          </div>
-          <span class="text-xs font-black text-emerald-800 flex items-center space-x-1">
-            <span>Jalankan Model Simulasi &rarr;</span>
-          </span>
-        </div>
-
-        <div id="cardMisiPahlawan" class="bg-white hover:bg-slate-50 rounded-3xl p-5 flex flex-col justify-between cursor-pointer border-2 border-purple-200 hover:border-purple-500 shadow-sm tactile-btn">
-          <div class="flex items-start justify-between">
-            <div class="w-12 h-12 rounded-2xl bg-purple-50 border border-purple-200 flex items-center justify-center text-2xl">
-              🎯
-            </div>
-            <span class="text-[10px] font-black text-purple-800 bg-purple-100 px-2.5 py-1 rounded-full">Fase 3: Evaluasi</span>
-          </div>
-          <div class="my-3">
-            <h4 class="text-base font-black text-slate-900 font-display">3. Sertifikasi & Riset</h4>
-            <p class="text-xs font-semibold text-slate-500 mt-1">
-              Uji pemahaman komprehensif terkait mitigasi iklim dan selesaikan tantangan esai.
-            </p>
-          </div>
-          <span class="text-xs font-black text-purple-800 flex items-center space-x-1">
-            <span>Mulai Uji Kompetensi &rarr;</span>
-          </span>
-        </div>
-      </div>
-    `;
-  }
-
-  /**
    * BIND EVENT LISTENERS UNTUK SELURUH ELEMEN INTERAKTIF
    */
   bindEvents(container) {
     // Hero CTA: Diarahkan ke Modul 1: Sains Kenali Bumi
     container.querySelector('#btnHeroStart')?.addEventListener('click', () => {
       this.appController.switchView('viewKenaliBumi');
-    });
-
-    // Hero SMP Simulation
-    container.querySelector('#btnHeroSmpSim')?.addEventListener('click', () => {
-      this.appController.switchView('viewKenaliBumi');
-    });
-
-    container.querySelector('#btnSmpSimTaman')?.addEventListener('click', () => {
-      this.appController.switchView('viewTamanAksi');
     });
 
     // Topic Cards Navigation
@@ -727,28 +599,12 @@ export class HomeView {
     container.querySelector('#btnStartAdventureIsland')?.addEventListener('click', () => {
       this.appController.switchView('viewTamanAksi');
     });
-
-    // SMP Cards Navigation
-    container.querySelector('#cardKenaliBumi')?.addEventListener('click', () => {
-      this.appController.switchView('viewKenaliBumi');
-    });
-
-    container.querySelector('#cardTamanAksi')?.addEventListener('click', () => {
-      this.appController.switchView('viewTamanAksi');
-    });
-
-    container.querySelector('#cardMisiPahlawan')?.addEventListener('click', () => {
-      this.appController.switchView('viewMisiPahlawan');
-    });
   }
 
   /**
    * UPDATE STATUS DINAMIS JIKA DATA GLOBAL BERUBAH TANPA RE-RENDER TOTAL
    */
   updateStats(state) {
-    const ptsEl = document.getElementById('headerEcoPoints');
-    if (ptsEl) {
-      ptsEl.textContent = state.ecoPoints;
-    }
+    // Hook pembaruan dinamis jika dibutuhkan di masa mendatang
   }
 }

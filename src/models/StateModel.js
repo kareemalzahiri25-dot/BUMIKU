@@ -14,7 +14,6 @@ const DEFAULT_STATE = {
   treesCount: 4,
   badges: ['sahabat_bumi', 'hemat_energi', 'pilah_sampah'],
   userLevel: 'Level 2: Sahabat Bumi',
-  userMode: 'sd', // 'sd' (Penjelajah Cilik) | 'smp' (Peneliti Muda)
   nextLevelPoints: 250
 };
 
@@ -65,37 +64,16 @@ export class StateModel {
 
   updateUserLevelTitle() {
     const pts = this.state.ecoPoints;
-    if (this.state.userMode === 'smp') {
-      if (pts < 100) {
-        this.state.userLevel = 'Level 1: Analis Pemula';
-        this.state.nextLevelPoints = 100;
-      } else if (pts < 250) {
-        this.state.userLevel = 'Level 2: Peneliti Pratama';
-        this.state.nextLevelPoints = 250;
-      } else {
-        this.state.userLevel = 'Level 3: Ahli Keberlanjutan';
-        this.state.nextLevelPoints = 500;
-      }
+    if (pts < 100) {
+      this.state.userLevel = 'Level 1: Penjaga Tunas';
+      this.state.nextLevelPoints = 100;
+    } else if (pts < 250) {
+      this.state.userLevel = 'Level 2: Sahabat Bumi';
+      this.state.nextLevelPoints = 250;
     } else {
-      if (pts < 100) {
-        this.state.userLevel = 'Level 1: Penjaga Tunas';
-        this.state.nextLevelPoints = 100;
-      } else if (pts < 250) {
-        this.state.userLevel = 'Level 2: Sahabat Bumi';
-        this.state.nextLevelPoints = 250;
-      } else {
-        this.state.userLevel = 'Level 3: Pahlawan Rimba';
-        this.state.nextLevelPoints = 500;
-      }
+      this.state.userLevel = 'Level 3: Pahlawan Rimba';
+      this.state.nextLevelPoints = 500;
     }
-  }
-
-  setUserMode(mode) {
-    if (mode !== 'sd' && mode !== 'smp') return;
-    this.state.userMode = mode;
-    this.updateUserLevelTitle();
-    this.saveToStorage();
-    this.notify();
   }
 
   addEcoPoints(pts) {
