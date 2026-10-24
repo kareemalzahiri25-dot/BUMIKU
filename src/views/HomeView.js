@@ -4,13 +4,11 @@
  * Dirombak total mengadopsi WonderLearn Visual Design System:
  * - 3D Panoramic Fantasy Hero (Pohon Raksasa, Observatorium Awan, Balon Udara)
  * - Trust Bar Jaminan Belajar Ramah Anak
- * - Explore by Topic (6 Kartu Squircle Pastel diapit Maskot Awa & Plang Kayu Penunjuk)
- * - Magical Stories (Kisah Dongeng Bumi)
- * - Play & Learn (5 Game Aksi Iklim Interaktif)
- * - Featured Adventure Bento (Pulau Harapan Melayang)
- * - Loved by Parents & Teachers (Testimoni Bintang 5)
+ * - Eksplorasi (Kenali Bumi, Pilih Aksimu, Bangun Kota Hijau, Misi dan Lencana)
+ * - Tantangan Harian & Streak Api (Duolingo-style Streak Tracker, EXP Progres & 4 Daily Eco-Quests)
  */
 import { globalState } from '../models/StateModel.js';
+import { sound } from '../utils/AudioSynth.js';
 
 export class HomeView {
   constructor(appController) {
@@ -18,9 +16,12 @@ export class HomeView {
   }
 
   render(container) {
+    const state = globalState.getState();
+    const progressPct = globalState.getProgressPercent();
+
     container.innerHTML = `
       <section class="space-y-8 md:space-y-12">
-        ${this.renderSdMode()}
+        ${this.renderSdMode(state, progressPct)}
       </section>
     `;
 
@@ -31,7 +32,7 @@ export class HomeView {
   /**
    * RENDER TAMPILAN BERANDA (WONDERLEARN AESTHETIC - PENJELAJAH CILIK)
    */
-  renderSdMode() {
+  renderSdMode(state, progressPct) {
     return `
       <!-- ========================================================
            HERO SECTION: WONDERLEARN 3D PANORAMA OBSERVATORY
@@ -78,218 +79,98 @@ export class HomeView {
       </div>
 
       <!-- ========================================================
-           EXPLORE BY TOPIC (WonderLearn Pastel Squircles + Awa Mascot)
-      ======================================================== -->
-      <div class="space-y-6 pt-4 sm:pt-6">
-        
-        <div class="text-center space-y-1">
-          <div class="inline-flex items-center space-x-2 text-amber-500 font-extrabold text-xs uppercase tracking-widest">
-            <span>✦</span>
-            <span>Topik Pembelajaran Iklim</span>
-            <span>✦</span>
-          </div>
-          <h2 class="text-2xl md:text-3xl font-black text-slate-800 tracking-tight font-display">
-            Jelajah Berdasarkan Topik
-          </h2>
-        </div>
-
-        <!-- 3-Column Layout: Mascot Awa on Left, 6 Topic Cards in Center, Signpost on Right -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-          
-          <!-- LEFT: 3D Mascot Awa si Awan Sarjana -->
-          <div class="hidden lg:flex lg:col-span-3 flex-col items-center text-center space-y-3">
-            <div class="relative w-44 h-44 animate-float-wiggle">
-              <img 
-                src="public/images/characters/awa_professor_book.png" 
-                alt="Profesor Awa" 
-                class="w-full h-full object-contain filter drop-shadow-xl"
-              />
-              <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white px-3 py-1 rounded-full text-[11px] font-black text-sky-700 shadow border border-sky-200 whitespace-nowrap">
-                ☁️ Profesor Awa
-              </span>
-            </div>
-            <p class="text-xs font-bold text-slate-500 max-w-[180px] leading-tight bg-white/80 p-2.5 rounded-2xl border border-sky-100 shadow-2xs">
-              "Pilih modul iklim favoritmu dan mulai kumpulkan poin hijau!"
-            </p>
-          </div>
-
-          <!-- CENTER: 6 Squircle Topic Cards -->
-          <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-            
-            <!-- 1. Rahasia Iklim -->
-            <div id="topicRahasiaIklim" class="bg-[#fef3c7] hover:bg-[#fde68a] p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-2 border-amber-200/90 text-center flex flex-col items-center justify-between shadow-xs hover:shadow-md transition-all tactile-btn cursor-pointer min-h-[135px] sm:min-h-[145px] group">
-              <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/90 shadow-2xs flex items-center justify-center text-xl sm:text-2xl group-hover:scale-110 transition-transform">
-                ☀️
-              </div>
-              <div class="mt-1.5 sm:mt-2">
-                <h4 class="text-xs sm:text-sm font-extrabold text-amber-950 font-display">Rahasia Iklim</h4>
-                <p class="text-[10px] font-bold text-amber-800/80 mt-0.5">Suhu & Pemanasan</p>
-              </div>
-            </div>
-
-            <!-- 2. Lab Udara (Atmosfer) -->
-            <div id="topicLabUdara" class="bg-[#e0f2fe] hover:bg-[#bae6fd] p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-2 border-sky-200/90 text-center flex flex-col items-center justify-between shadow-xs hover:shadow-md transition-all tactile-btn cursor-pointer min-h-[135px] sm:min-h-[145px] group">
-              <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/90 shadow-2xs flex items-center justify-center text-xl sm:text-2xl group-hover:scale-110 transition-transform">
-                🧪
-              </div>
-              <div class="mt-1.5 sm:mt-2">
-                <h4 class="text-xs sm:text-sm font-extrabold text-sky-950 font-display">Lab Udara</h4>
-                <p class="text-[10px] font-bold text-sky-800/80 mt-0.5">Selimut Gas Awan</p>
-              </div>
-            </div>
-
-            <!-- 3. Pilah Sampah Pila -->
-            <div id="topicPilahSampah" class="bg-[#dcfce7] hover:bg-[#bbf7d0] p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-2 border-emerald-200/90 text-center flex flex-col items-center justify-between shadow-xs hover:shadow-md transition-all tactile-btn cursor-pointer min-h-[135px] sm:min-h-[145px] group">
-              <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/90 shadow-2xs flex items-center justify-center text-xl sm:text-2xl group-hover:scale-110 transition-transform">
-                ♻️
-              </div>
-              <div class="mt-1.5 sm:mt-2">
-                <h4 class="text-xs sm:text-sm font-extrabold text-emerald-950 font-display">Pilah Sampah</h4>
-                <p class="text-[10px] font-bold text-emerald-800/80 mt-0.5">3 Wadah Pila</p>
-              </div>
-            </div>
-
-            <!-- 4. Studio Energi Nala -->
-            <div id="topicEnergiBersih" class="bg-[#fce7f3] hover:bg-[#fbcfe8] p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-2 border-pink-200/90 text-center flex flex-col items-center justify-between shadow-xs hover:shadow-md transition-all tactile-btn cursor-pointer min-h-[135px] sm:min-h-[145px] group">
-              <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/90 shadow-2xs flex items-center justify-center text-xl sm:text-2xl group-hover:scale-110 transition-transform">
-                💡
-              </div>
-              <div class="mt-1.5 sm:mt-2">
-                <h4 class="text-xs sm:text-sm font-extrabold text-pink-950 font-display">Studio Energi</h4>
-                <p class="text-[10px] font-bold text-pink-800/80 mt-0.5">Hemat Listrik & Air</p>
-              </div>
-            </div>
-
-            <!-- 5. Taman Kota Hijau Tata -->
-            <div id="topicKotaHijau" class="bg-[#ffedd5] hover:bg-[#fed7aa] p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-2 border-orange-200/90 text-center flex flex-col items-center justify-between shadow-xs hover:shadow-md transition-all tactile-btn cursor-pointer min-h-[135px] sm:min-h-[145px] group">
-              <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/90 shadow-2xs flex items-center justify-center text-xl sm:text-2xl group-hover:scale-110 transition-transform">
-                🌳
-              </div>
-              <div class="mt-1.5 sm:mt-2">
-                <h4 class="text-xs sm:text-sm font-extrabold text-orange-950 font-display">Taman Kota Asri</h4>
-                <p class="text-[10px] font-bold text-orange-800/80 mt-0.5">Arsitektur Tata</p>
-              </div>
-            </div>
-
-            <!-- 6. Misi Pahlawan Cilik -->
-            <div id="topicMisiCilik" class="bg-[#ede9fe] hover:bg-[#ddd6fe] p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-2 border-purple-200/90 text-center flex flex-col items-center justify-between shadow-xs hover:shadow-md transition-all tactile-btn cursor-pointer min-h-[135px] sm:min-h-[145px] group">
-              <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/90 shadow-2xs flex items-center justify-center text-xl sm:text-2xl group-hover:scale-110 transition-transform">
-                🏆
-              </div>
-              <div class="mt-1.5 sm:mt-2">
-                <h4 class="text-xs sm:text-sm font-extrabold text-purple-950 font-display">Misi Pahlawan</h4>
-                <p class="text-[10px] font-bold text-purple-800/80 mt-0.5">Kuis & Lencana</p>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- RIGHT: Directional Signpost & Mini Guide -->
-          <div class="hidden lg:flex lg:col-span-2 flex-col items-center justify-center space-y-3">
-            <div class="bg-gradient-to-b from-amber-700 via-amber-800 to-amber-950 text-white p-3 rounded-2xl shadow-lg border-2 border-amber-600 text-center space-y-2 w-full max-w-[150px]">
-              <div class="text-xl animate-gentle-bounce">🐦</div>
-              <div class="space-y-1 text-[11px] font-black uppercase tracking-wider">
-                <div class="bg-amber-600/90 py-1 px-2 rounded-lg shadow-xs">Jelajah</div>
-                <div class="bg-amber-500/90 py-1 px-2 rounded-lg shadow-xs">Belajar</div>
-                <div class="bg-emerald-600/90 py-1 px-2 rounded-lg shadow-xs">Aksi Nyata</div>
-              </div>
-            </div>
-            <span class="text-[10px] font-bold text-slate-400">Petunjuk Arah</span>
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- ========================================================
-           MAGICAL STORIES (Dongeng & Cerita Inspiratif Iklim)
+           EKSPLORASI (4 Pintu Utama Modul Petualangan)
       ======================================================== -->
       <div class="space-y-5 pt-4">
         
         <div class="flex items-center justify-between">
           <div>
             <h3 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight font-display">
-              Kisah & Dongeng Bumi
+              Eksplorasi
             </h3>
-            <p class="text-xs font-semibold text-slate-400">Cerita bergambar inspiratif seputar cinta lingkungan</p>
+            <p class="text-xs font-semibold text-slate-400">Jelajahi modul petualangan iklim interaktif dan kumpulkan poin hijau!</p>
           </div>
-          <button id="btnViewAllStories" class="px-4 py-1.5 rounded-full bg-white hover:bg-slate-50 text-sky-700 font-extrabold text-xs border border-sky-200 shadow-2xs tactile-btn flex items-center space-x-1">
-            <span>Lihat Semua Cerita</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-          </button>
         </div>
 
-        <!-- 4 Story Cards Grid -->
+        <!-- 4 Exploration Cards Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           
-          <!-- Story 1 -->
-          <div class="story-card bg-white rounded-3xl overflow-hidden border border-sky-100 shadow-sm hover:shadow-lg transition-all tactile-btn cursor-pointer flex flex-col justify-between group">
-            <div class="relative aspect-[16/10] bg-gradient-to-tr from-indigo-900 to-sky-700 flex items-center justify-center overflow-hidden">
-              <span class="text-5xl group-hover:scale-110 transition-transform">🎈</span>
-              <span class="absolute top-2.5 left-2.5 bg-sky-500/90 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">
-                Persahabatan
-              </span>
+          <!-- Kartu 1: Kenali Bumi -->
+          <div id="cardExploreKenali" class="bg-white rounded-3xl overflow-hidden border border-sky-100 shadow-sm hover:shadow-lg transition-all tactile-btn cursor-pointer flex flex-col justify-between group">
+            <div class="relative aspect-[16/10] bg-gradient-to-tr from-sky-100 to-sky-200 flex items-center justify-center overflow-hidden border-b border-sky-100">
+              <!-- Tempat gambar: ganti path src sesuai kebutuhan -->
+              <img 
+                src="public/images/characters/awa_standing.png" 
+                alt="Kenali Bumi" 
+                class="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-300" 
+              />
             </div>
             <div class="p-4 space-y-1">
               <h4 class="text-sm font-extrabold text-slate-800 group-hover:text-sky-600 transition-colors font-display">
-                Balon Udara Bintang
+                Kenali Bumi
               </h4>
               <p class="text-[11px] font-semibold text-slate-500 line-clamp-2">
-                Nala dan kawan-kawan berlayar di langit malam mencari energi angin terbersih.
+                Pahami rahasia sains iklim, efek rumah kaca, dan atmosfer pelindung bumi.
               </p>
             </div>
           </div>
 
-          <!-- Story 2 -->
-          <div class="story-card bg-white rounded-3xl overflow-hidden border border-sky-100 shadow-sm hover:shadow-lg transition-all tactile-btn cursor-pointer flex flex-col justify-between group">
-            <div class="relative aspect-[16/10] bg-gradient-to-tr from-purple-900 to-indigo-700 flex items-center justify-center overflow-hidden">
-              <span class="text-5xl group-hover:scale-110 transition-transform">🌙</span>
-              <span class="absolute top-2.5 left-2.5 bg-purple-500/90 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">
-                Fantasi Sains
-              </span>
+          <!-- Kartu 2: Pilih Aksimu -->
+          <div id="cardExplorePilihAksi" class="bg-white rounded-3xl overflow-hidden border border-amber-100 shadow-sm hover:shadow-lg transition-all tactile-btn cursor-pointer flex flex-col justify-between group">
+            <div class="relative aspect-[16/10] bg-gradient-to-tr from-amber-50 to-amber-200 flex items-center justify-center overflow-hidden border-b border-amber-100">
+              <!-- Tempat gambar: ganti path src sesuai kebutuhan -->
+              <img 
+                src="public/images/characters/pila_holding_can.png" 
+                alt="Pilih Aksimu" 
+                class="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-300" 
+              />
+            </div>
+            <div class="p-4 space-y-1">
+              <h4 class="text-sm font-extrabold text-slate-800 group-hover:text-amber-600 transition-colors font-display">
+                Pilih Aksimu
+              </h4>
+              <p class="text-[11px] font-semibold text-slate-500 line-clamp-2">
+                Lakukan aksi nyata memilah sampah, hemat listrik, dan gaya hidup ramah lingkungan.
+              </p>
+            </div>
+          </div>
+
+          <!-- Kartu 3: Bangun Kota Hijau -->
+          <div id="cardExploreKotaHijau" class="bg-white rounded-3xl overflow-hidden border border-emerald-100 shadow-sm hover:shadow-lg transition-all tactile-btn cursor-pointer flex flex-col justify-between group">
+            <div class="relative aspect-[16/10] bg-gradient-to-tr from-emerald-50 to-emerald-200 flex items-center justify-center overflow-hidden border-b border-emerald-100">
+              <!-- Tempat gambar: ganti path src sesuai kebutuhan -->
+              <img 
+                src="public/images/characters/tata_helmet_sprout.png" 
+                alt="Bangun Kota Hijau" 
+                class="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-300" 
+              />
+            </div>
+            <div class="p-4 space-y-1">
+              <h4 class="text-sm font-extrabold text-slate-800 group-hover:text-emerald-600 transition-colors font-display">
+                Bangun Kota Hijau
+              </h4>
+              <p class="text-[11px] font-semibold text-slate-500 line-clamp-2">
+                Rancang ruang terbuka hijau, tanam pohon, dan ciptakan lingkungan kota yang asri.
+              </p>
+            </div>
+          </div>
+
+          <!-- Kartu 4: Misi dan Lencana -->
+          <div id="cardExploreMisi" class="bg-white rounded-3xl overflow-hidden border border-purple-100 shadow-sm hover:shadow-lg transition-all tactile-btn cursor-pointer flex flex-col justify-between group">
+            <div class="relative aspect-[16/10] bg-gradient-to-tr from-purple-50 to-purple-200 flex items-center justify-center overflow-hidden border-b border-purple-100">
+              <!-- Tempat gambar: ganti path src sesuai kebutuhan -->
+              <img 
+                src="public/images/characters/terra_happy.png" 
+                alt="Misi dan Lencana" 
+                class="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-300" 
+              />
             </div>
             <div class="p-4 space-y-1">
               <h4 class="text-sm font-extrabold text-slate-800 group-hover:text-purple-600 transition-colors font-display">
-                Luna & Selimut Awan
+                Misi dan Lencana
               </h4>
               <p class="text-[11px] font-semibold text-slate-500 line-clamp-2">
-                Awa membagikan rahasia bagaimana atmosfer melindungi bumi dari panas matahari.
-              </p>
-            </div>
-          </div>
-
-          <!-- Story 3 -->
-          <div class="story-card bg-white rounded-3xl overflow-hidden border border-sky-100 shadow-sm hover:shadow-lg transition-all tactile-btn cursor-pointer flex flex-col justify-between group">
-            <div class="relative aspect-[16/10] bg-gradient-to-tr from-teal-800 to-emerald-600 flex items-center justify-center overflow-hidden">
-              <span class="text-5xl group-hover:scale-110 transition-transform">⛵</span>
-              <span class="absolute top-2.5 left-2.5 bg-teal-500/90 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">
-                Petualangan
-              </span>
-            </div>
-            <div class="p-4 space-y-1">
-              <h4 class="text-sm font-extrabold text-slate-800 group-hover:text-teal-600 transition-colors font-display">
-                Pelaut Cilik Terumbu
-              </h4>
-              <p class="text-[11px] font-semibold text-slate-500 line-clamp-2">
-                Menyelam menjaga rumah ikan dan terumbu karang dari air laut yang kian hangat.
-              </p>
-            </div>
-          </div>
-
-          <!-- Story 4 -->
-          <div class="story-card bg-white rounded-3xl overflow-hidden border border-sky-100 shadow-sm hover:shadow-lg transition-all tactile-btn cursor-pointer flex flex-col justify-between group">
-            <div class="relative aspect-[16/10] bg-gradient-to-tr from-amber-700 to-rose-600 flex items-center justify-center overflow-hidden">
-              <span class="text-5xl group-hover:scale-110 transition-transform">🌺</span>
-              <span class="absolute top-2.5 left-2.5 bg-rose-500/90 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">
-                Kebaikan
-              </span>
-            </div>
-            <div class="p-4 space-y-1">
-              <h4 class="text-sm font-extrabold text-slate-800 group-hover:text-rose-600 transition-colors font-display">
-                Taman Rahasia Pahlawan
-              </h4>
-              <p class="text-[11px] font-semibold text-slate-500 line-clamp-2">
-                Tindakan kecil menanam pohon yang menyulap lahan tandus menjadi surga hijau.
+                Selesaikan tantangan iklim harian, ikuti kuis seru, dan raih piala lencana pahlawan.
               </p>
             </div>
           </div>
@@ -299,223 +180,226 @@ export class HomeView {
       </div>
 
       <!-- ========================================================
-           PLAY & LEARN (5 Game Aksi Interaktif)
-      ======================================================== -->
-      <div class="space-y-5 pt-4">
-        
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight font-display">
-              Bermain & Beraksi
-            </h3>
-            <p class="text-xs font-semibold text-slate-400">Game interaktif menyenangkan yang berdampak langsung pada skor bumi</p>
-          </div>
-          <button id="btnViewAllGames" class="px-4 py-1.5 rounded-full bg-white hover:bg-slate-50 text-emerald-700 font-extrabold text-xs border border-emerald-200 shadow-2xs tactile-btn flex items-center space-x-1">
-            <span>Lihat Semua Game</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-          </button>
-        </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
-          
-          <!-- Game 1: Taman Aksi Iklim -->
-          <div id="gameTamanAksi" class="bg-white rounded-3xl p-3.5 border-2 border-emerald-200/80 shadow-xs hover:shadow-lg transition-all tactile-btn cursor-pointer flex flex-col justify-between group">
-            <div class="relative aspect-square rounded-2xl bg-gradient-to-tr from-emerald-100 to-teal-50 flex items-center justify-center overflow-hidden">
-              <img src="public/images/characters/terra_cheering.png" alt="Taman Aksi" class="w-20 h-20 object-contain group-hover:scale-110 transition-transform" />
-              <button class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-[#10b981] text-white flex items-center justify-center shadow-md shadow-emerald-500/30">
-                <i data-lucide="play" class="w-4 h-4 fill-white ml-0.5"></i>
-              </button>
-            </div>
-            <div class="mt-2.5">
-              <h5 class="text-xs sm:text-sm font-extrabold text-slate-800 font-display">Taman Aksi</h5>
-              <p class="text-[10px] font-bold text-slate-400">Bersihkan & Tanam</p>
-            </div>
-          </div>
-
-          <!-- Game 2: Balon Kuis Iklim -->
-          <div id="gameKuisIklim" class="bg-white rounded-3xl p-3.5 border-2 border-amber-200/80 shadow-xs hover:shadow-lg transition-all tactile-btn cursor-pointer flex flex-col justify-between group">
-            <div class="relative aspect-square rounded-2xl bg-gradient-to-tr from-amber-100 to-yellow-50 flex items-center justify-center overflow-hidden">
-              <span class="text-4xl group-hover:scale-110 transition-transform">🎈</span>
-              <button class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-[#10b981] text-white flex items-center justify-center shadow-md shadow-emerald-500/30">
-                <i data-lucide="play" class="w-4 h-4 fill-white ml-0.5"></i>
-              </button>
-            </div>
-            <div class="mt-2.5">
-              <h5 class="text-xs sm:text-sm font-extrabold text-slate-800 font-display">Kuis Teka-Teki</h5>
-              <p class="text-[10px] font-bold text-slate-400">SDGs 4 & 13</p>
-            </div>
-          </div>
-
-          <!-- Game 3: Puzzle Kota Hijau -->
-          <div id="gamePuzzleKota" class="bg-white rounded-3xl p-3.5 border-2 border-sky-200/80 shadow-xs hover:shadow-lg transition-all tactile-btn cursor-pointer flex flex-col justify-between group">
-            <div class="relative aspect-square rounded-2xl bg-gradient-to-tr from-sky-100 to-indigo-50 flex items-center justify-center overflow-hidden">
-              <span class="text-4xl group-hover:scale-110 transition-transform">🧩</span>
-              <button class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-[#10b981] text-white flex items-center justify-center shadow-md shadow-emerald-500/30">
-                <i data-lucide="play" class="w-4 h-4 fill-white ml-0.5"></i>
-              </button>
-            </div>
-            <div class="mt-2.5">
-              <h5 class="text-xs sm:text-sm font-extrabold text-slate-800 font-display">Puzzle Kota</h5>
-              <p class="text-[10px] font-bold text-slate-400">Rancang RTH</p>
-            </div>
-          </div>
-
-          <!-- Game 4: Lab Selimut Gas -->
-          <div id="gameLabGas" class="bg-white rounded-3xl p-3.5 border-2 border-cyan-200/80 shadow-xs hover:shadow-lg transition-all tactile-btn cursor-pointer flex flex-col justify-between group">
-            <div class="relative aspect-square rounded-2xl bg-gradient-to-tr from-cyan-100 to-teal-50 flex items-center justify-center overflow-hidden">
-              <span class="text-4xl group-hover:scale-110 transition-transform">⚛️</span>
-              <button class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-[#10b981] text-white flex items-center justify-center shadow-md shadow-emerald-500/30">
-                <i data-lucide="play" class="w-4 h-4 fill-white ml-0.5"></i>
-              </button>
-            </div>
-            <div class="mt-2.5">
-              <h5 class="text-xs sm:text-sm font-extrabold text-slate-800 font-display">Lab Gas Awa</h5>
-              <p class="text-[10px] font-bold text-slate-400">Simulasi Termal</p>
-            </div>
-          </div>
-
-          <!-- Game 5: Kartu Memori Energi -->
-          <div id="gameKartuMemori" class="col-span-2 sm:col-span-1 bg-white rounded-3xl p-3.5 border-2 border-purple-200/80 shadow-xs hover:shadow-lg transition-all tactile-btn cursor-pointer flex flex-row sm:flex-col items-center sm:items-stretch justify-between group">
-            <div class="relative w-16 h-16 sm:w-auto sm:aspect-square shrink-0 rounded-2xl bg-gradient-to-tr from-purple-100 to-pink-50 flex items-center justify-center overflow-hidden">
-              <span class="text-3xl sm:text-4xl group-hover:scale-110 transition-transform">🃏</span>
-              <button class="hidden sm:flex absolute bottom-2 right-2 w-9 h-9 rounded-full bg-[#10b981] text-white items-center justify-center shadow-md shadow-emerald-500/30">
-                <i data-lucide="play" class="w-4 h-4 fill-white ml-0.5"></i>
-              </button>
-            </div>
-            <div class="flex-1 sm:flex-initial ml-3 sm:ml-0 mt-0 sm:mt-2.5">
-              <h5 class="text-xs sm:text-sm font-extrabold text-slate-800 font-display">Kartu Memori</h5>
-              <p class="text-[10px] font-bold text-slate-400">Cocokkan Energi</p>
-            </div>
-            <button class="sm:hidden w-8 h-8 rounded-full bg-[#10b981] text-white flex items-center justify-center shadow-md shadow-emerald-500/30 shrink-0">
-              <i data-lucide="play" class="w-3.5 h-3.5 fill-white ml-0.5"></i>
-            </button>
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- ========================================================
-           FEATURED ADVENTURES (Pulau Harapan - Bento Panorama)
-      ======================================================== -->
-      <div class="relative overflow-hidden rounded-2xl sm:rounded-[32px] bg-gradient-to-r from-sky-100 via-teal-50 to-white border-2 border-sky-200 p-4 sm:p-6 md:p-10 shadow-md">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-          
-          <!-- Left: 3D Illustration Image -->
-          <div class="lg:col-span-6 rounded-2xl overflow-hidden shadow-lg border-2 border-white aspect-[16/10] bg-sky-200">
-            <img 
-              src="public/images/featured_adventure_island.png" 
-              alt="Pulau Harapan Melayang" 
-              class="w-full h-full object-cover object-center filter saturate-105"
-            />
-          </div>
-
-          <!-- Right: Story Details & CTA -->
-          <div class="lg:col-span-6 space-y-4">
-            <div class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs">
-              <span>🏝️</span>
-              <span>Petualangan Unggulan Minggu Ini</span>
-            </div>
-
-            <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-display leading-tight">
-              Pulau Harapan: <br class="hidden sm:inline" />
-              <span class="text-[#0284c7]">Ekspedisi Pulau Terapung</span>
-            </h3>
-
-            <p class="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">
-              Bergabunglah bersama Mia, Leo, dan Aria dalam pelayaran balon udara menjelajahi pulau terapung penuh teka-teki iklim, kuis seru, dan penemuan energi terbarukan!
-            </p>
-
-            <div class="pt-2">
-              <button id="btnStartAdventureIsland" class="bg-[#fbbf24] hover:bg-[#f59e0b] text-[#1e293b] px-6 py-3 rounded-full font-extrabold text-xs sm:text-sm flex items-center space-x-2 shadow-lg shadow-amber-500/25 tactile-btn border border-yellow-200">
-                <span>Mulai Petualangan Iklim</span>
-                <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </button>
-            </div>
-
-            <!-- Carousel Pagination Dots -->
-            <div class="flex items-center space-x-2 pt-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
-              <span class="w-6 h-2.5 rounded-full bg-[#10b981] shadow-xs"></span>
-              <span class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- ========================================================
-           LOVED BY PARENTS & TEACHERS (Testimonial Cards)
+           TANTANGAN HARIAN & STREAK API (DAILY ECO-QUESTS)
       ======================================================== -->
       <div class="space-y-6 pt-4">
         
-        <div class="text-center space-y-1">
-          <div class="inline-flex items-center space-x-2 text-amber-500 font-extrabold text-xs uppercase tracking-widest">
-            <span>✦</span>
-            <span>Ulasan & Testimoni</span>
-            <span>✦</span>
+        <!-- Header Section -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-[11px] font-black uppercase tracking-wider mb-1.5">
+              <span>🔥</span>
+              <span>Tantangan Harian & Streak Api</span>
+            </div>
+            <h3 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight font-display">
+              Tantangan Pahlawan Cilik
+            </h3>
+            <p class="text-xs font-semibold text-slate-500">
+              Selesaikan misi nyata di rumah, jaga api streak-mu membara, dan raih EXP untuk naik level!
+            </p>
           </div>
-          <h2 class="text-2xl md:text-3xl font-black text-slate-800 tracking-tight font-display">
-            Dicintai Guru & Orang Tua
-          </h2>
+          <button id="btnOpenMisiPage" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold text-xs shadow-md shadow-emerald-500/25 tactile-btn flex items-center space-x-2 self-start sm:self-auto shrink-0 transition-all">
+            <span>Buka Lemari Misi & Lencana</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Duolingo-style Streak & EXP Level Progress Banner -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
           
-          <!-- Testimonial 1 -->
-          <div class="bg-white rounded-3xl p-5 border border-sky-100 shadow-sm space-y-3">
-            <div class="flex items-center space-x-1 text-amber-400 text-sm">
-              ⭐⭐⭐⭐⭐
+          <!-- Streak Fire Card (Duolingo Style) -->
+          <div class="md:col-span-6 bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 rounded-3xl p-5 sm:p-6 text-white shadow-lg shadow-orange-500/20 relative overflow-hidden flex flex-col justify-between">
+            <div class="absolute -right-4 -bottom-4 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+            
+            <div class="flex items-start justify-between relative z-10">
+              <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-xs flex items-center justify-center text-3xl sm:text-4xl shadow-inner animate-pulse">
+                  🔥
+                </div>
+                <div>
+                  <span class="text-[10px] font-black uppercase tracking-wider text-amber-100 block">Streak Harian</span>
+                  <div class="text-2xl sm:text-3xl font-black font-display tracking-tight leading-none mt-0.5">
+                    ${state.streakDays || 3} Hari Beruntun!
+                  </div>
+                </div>
+              </div>
+              <span class="text-[10px] font-black px-2.5 py-1 rounded-full bg-white/25 text-white backdrop-blur-xs">
+                Membara ✨
+              </span>
             </div>
-            <p class="text-xs font-semibold text-slate-600 leading-relaxed">
-              "BumiKita membuat murid-murid SD saya antusias belajar iklim. Konsep sains yang tadinya sulit dijelaskan kini dipahami lewat game interaktif!"
+
+            <p class="text-xs font-semibold text-amber-100 mt-3 relative z-10">
+              Hebat! Kamu konsisten menjaga bumi. Jangan biarkan apimu padam hari ini!
             </p>
-            <div class="flex items-center space-x-3 pt-1 border-t border-slate-100">
-              <div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs flex items-center justify-center">
-                SM
-              </div>
-              <div>
-                <h5 class="text-xs font-extrabold text-slate-800">Ibu Sarah M.</h5>
-                <span class="text-[10px] font-bold text-slate-400">Guru Kelas 4 SDN 01</span>
-              </div>
+
+            <!-- 7-Day Flame Track -->
+            <div class="mt-4 pt-3 border-t border-white/20 flex items-center justify-between relative z-10">
+              ${['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'].map((day, idx) => {
+                const isActive = (state.streakWeek && state.streakWeek[idx]) || idx < (state.streakDays || 3);
+                return `
+                  <div class="flex flex-col items-center">
+                    <div class="w-8 h-8 rounded-full ${isActive ? 'bg-white text-orange-600 shadow-md font-black' : 'bg-white/15 text-white/50 border border-white/20 font-bold'} flex items-center justify-center text-xs transition-transform hover:scale-110">
+                      ${isActive ? '🔥' : '·'}
+                    </div>
+                    <span class="text-[10px] font-bold ${isActive ? 'text-white' : 'text-amber-200/70'} mt-1">${day}</span>
+                  </div>
+                `;
+              }).join('')}
             </div>
           </div>
 
-          <!-- Testimonial 2 -->
-          <div class="bg-white rounded-3xl p-5 border border-sky-100 shadow-sm space-y-3">
-            <div class="flex items-center space-x-1 text-amber-400 text-sm">
-              ⭐⭐⭐⭐⭐
+          <!-- Level & EXP Progress Card -->
+          <div class="md:col-span-6 bg-white rounded-3xl p-5 sm:p-6 border-2 border-emerald-100 shadow-sm flex flex-col justify-between">
+            <div class="flex items-start justify-between">
+              <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-emerald-100 to-teal-50 text-emerald-600 flex items-center justify-center text-2xl sm:text-3xl shadow-2xs border border-emerald-200">
+                  🌱
+                </div>
+                <div>
+                  <span class="text-[10px] font-black uppercase tracking-wider text-emerald-600 block">Peringkat Pahlawan</span>
+                  <h4 class="text-lg sm:text-xl font-black text-slate-800 font-display">
+                    ${state.userLevel || 'Level 2: Sahabat Bumi'}
+                  </h4>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-black text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 inline-block">
+                  ${state.ecoPoints} EXP
+                </span>
+              </div>
             </div>
-            <p class="text-xs font-semibold text-slate-600 leading-relaxed">
-              "Anak saya sekarang selalu mematikan keran air dan memilah sampah plastik di rumah. Karakternya hidup dan sangat menginspirasi."
-            </p>
-            <div class="flex items-center space-x-3 pt-1 border-t border-slate-100">
-              <div class="w-9 h-9 rounded-full bg-sky-100 text-sky-800 font-black text-xs flex items-center justify-center">
-                DR
+
+            <!-- EXP Bar -->
+            <div class="my-3 space-y-2">
+              <div class="flex justify-between items-center text-xs font-bold text-slate-500">
+                <span>Progres Menuju Level Berikutnya</span>
+                <span class="text-emerald-700 font-black">${progressPct}%</span>
               </div>
-              <div>
-                <h5 class="text-xs font-extrabold text-slate-800">Pak Daniel R.</h5>
-                <span class="text-[10px] font-bold text-slate-400">Orang Tua Murid</span>
+              <div class="w-full bg-slate-100 h-3.5 rounded-full overflow-hidden p-0.5 border border-slate-200/60">
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-700 shadow-inner" style="width: ${progressPct}%"></div>
               </div>
+              <p class="text-[11px] font-semibold text-slate-400 flex items-center justify-between">
+                <span>${state.ecoPoints} / ${state.nextLevelPoints} Poin EXP</span>
+                <span class="text-emerald-600 font-bold">+${Math.max(0, state.nextLevelPoints - state.ecoPoints)} EXP lagi</span>
+              </p>
+            </div>
+
+            <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] font-semibold text-slate-500">
+              <span>Selesaikan tantangan di bawah untuk panen EXP!</span>
+              <span class="text-emerald-600 font-black">Level Cepat ⚡</span>
             </div>
           </div>
 
-          <!-- Testimonial 3 -->
-          <div class="bg-white rounded-3xl p-5 border border-sky-100 shadow-sm space-y-3">
-            <div class="flex items-center space-x-1 text-amber-400 text-sm">
-              ⭐⭐⭐⭐⭐
+        </div>
+
+        <!-- 4 Quick Quest Action Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <!-- Quest 1: Matikan Lampu -->
+          <div class="bg-white rounded-3xl p-4 sm:p-5 border-2 ${globalState.isMissionCompleted('quest_lampu') ? 'border-emerald-200 bg-emerald-50/20' : 'border-amber-200/80'} shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-11 h-11 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold shadow-2xs group-hover:scale-105 transition-transform">
+                  💡
+                </div>
+                <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                  +15 EXP • 🔥 +1
+                </span>
+              </div>
+              <h5 class="text-sm font-extrabold text-slate-800 font-display">Matikan Lampu Siang</h5>
+              <p class="text-xs font-semibold text-slate-500 mt-1">
+                Matikan lampu belajar saat kamar sudah terang benderang oleh matahari.
+              </p>
             </div>
-            <p class="text-xs font-semibold text-slate-600 leading-relaxed">
-              "Aplikasi terbaik untuk implementasi SDG 4 dan 13 di sekolah dasar. Desainnya sangat ramah anak dan bebas dari distraksi iklan."
-            </p>
-            <div class="flex items-center space-x-3 pt-1 border-t border-slate-100">
-              <div class="w-9 h-9 rounded-full bg-purple-100 text-purple-800 font-black text-xs flex items-center justify-center">
-                PS
+            <div class="mt-4 pt-3 border-t border-slate-100">
+              ${globalState.isMissionCompleted('quest_lampu') 
+                ? `<button disabled class="w-full py-2 rounded-xl bg-emerald-100 text-emerald-800 font-black text-xs flex items-center justify-center space-x-1 cursor-default">
+                    <span>Selesai ✓</span>
+                  </button>`
+                : `<button id="btnQuestLampu" class="w-full py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs shadow-xs tactile-btn flex items-center justify-center space-x-1">
+                    <span>Sudah Kulakukan! ⚡</span>
+                  </button>`
+              }
+            </div>
+          </div>
+
+          <!-- Quest 2: Tutup Keran Air -->
+          <div class="bg-white rounded-3xl p-4 sm:p-5 border-2 ${globalState.isMissionCompleted('quest_keran') ? 'border-emerald-200 bg-emerald-50/20' : 'border-sky-200/80'} shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-11 h-11 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl font-bold shadow-2xs group-hover:scale-105 transition-transform">
+                  💧
+                </div>
+                <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800">
+                  +15 EXP • 🔥 +1
+                </span>
               </div>
-              <div>
-                <h5 class="text-xs font-extrabold text-slate-800">Ibu Priya S.</h5>
-                <span class="text-[10px] font-bold text-slate-400">Pendidik Lingkungan</span>
+              <h5 class="text-sm font-extrabold text-slate-800 font-display">Tutup Rapat Keran Air</h5>
+              <p class="text-xs font-semibold text-slate-500 mt-1">
+                Pastikan keran wastafel terkunci rapat dan tidak ada tetesan air terbuang.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100">
+              ${globalState.isMissionCompleted('quest_keran') 
+                ? `<button disabled class="w-full py-2 rounded-xl bg-emerald-100 text-emerald-800 font-black text-xs flex items-center justify-center space-x-1 cursor-default">
+                    <span>Selesai ✓</span>
+                  </button>`
+                : `<button id="btnQuestKeran" class="w-full py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs shadow-xs tactile-btn flex items-center justify-center space-x-1">
+                    <span>Sudah Kulakukan! 💧</span>
+                  </button>`
+              }
+            </div>
+          </div>
+
+          <!-- Quest 3: Botol Minum Tumbler -->
+          <div class="bg-white rounded-3xl p-4 sm:p-5 border-2 ${globalState.isMissionCompleted('quest_tumbler') ? 'border-emerald-200 bg-emerald-50/20' : 'border-teal-200/80'} shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-11 h-11 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center text-xl font-bold shadow-2xs group-hover:scale-105 transition-transform">
+                  🥤
+                </div>
+                <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-800">
+                  +20 EXP • 🔥 +1
+                </span>
               </div>
+              <h5 class="text-sm font-extrabold text-slate-800 font-display">Gunakan Botol Tumbler</h5>
+              <p class="text-xs font-semibold text-slate-500 mt-1">
+                Gunakan botol minum isi ulang saat bermain untuk kurangi sampah plastik.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100">
+              ${globalState.isMissionCompleted('quest_tumbler') 
+                ? `<button disabled class="w-full py-2 rounded-xl bg-emerald-100 text-emerald-800 font-black text-xs flex items-center justify-center space-x-1 cursor-default">
+                    <span>Selesai ✓</span>
+                  </button>`
+                : `<button id="btnQuestTumbler" class="w-full py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-xs shadow-xs tactile-btn flex items-center justify-center space-x-1">
+                    <span>Sudah Kulakukan! 🥤</span>
+                  </button>`
+              }
+            </div>
+          </div>
+
+          <!-- Quest 4: Kuis Pengetahuan Iklim -->
+          <div class="bg-white rounded-3xl p-4 sm:p-5 border-2 border-purple-200/80 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-11 h-11 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl font-bold shadow-2xs group-hover:scale-105 transition-transform">
+                  🧠
+                </div>
+                <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800">
+                  +30 EXP • 🏆 Lencana
+                </span>
+              </div>
+              <h5 class="text-sm font-extrabold text-slate-800 font-display">Tantangan Kuis Sains</h5>
+              <p class="text-xs font-semibold text-slate-500 mt-1">
+                Uji wawasan iklim bersama Awa & Terra dan buka piala lencana baru!
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100">
+              <button id="btnQuestKuis" class="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs shadow-xs tactile-btn flex items-center justify-center space-x-1">
+                <span>Mulai Kuis ⚡</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </button>
             </div>
           </div>
 
@@ -534,71 +418,53 @@ export class HomeView {
       this.appController.switchView('viewKenaliBumi');
     });
 
-    // Topic Cards Navigation
-    container.querySelector('#topicRahasiaIklim')?.addEventListener('click', () => {
+    // Exploration Cards Navigation
+    container.querySelector('#cardExploreKenali')?.addEventListener('click', () => {
       this.appController.switchView('viewKenaliBumi');
     });
 
-    container.querySelector('#topicLabUdara')?.addEventListener('click', () => {
-      this.appController.switchView('viewKenaliBumi');
-    });
-
-    container.querySelector('#topicPilahSampah')?.addEventListener('click', () => {
+    container.querySelector('#cardExplorePilihAksi')?.addEventListener('click', () => {
       this.appController.switchView('viewTamanAksi');
     });
 
-    container.querySelector('#topicEnergiBersih')?.addEventListener('click', () => {
+    container.querySelector('#cardExploreKotaHijau')?.addEventListener('click', () => {
       this.appController.switchView('viewTamanAksi');
     });
 
-    container.querySelector('#topicKotaHijau')?.addEventListener('click', () => {
-      this.appController.switchView('viewTamanAksi');
-    });
-
-    container.querySelector('#topicMisiCilik')?.addEventListener('click', () => {
+    container.querySelector('#cardExploreMisi')?.addEventListener('click', () => {
       this.appController.switchView('viewMisiPahlawan');
     });
 
-    // Story Cards & Button
-    container.querySelector('#btnViewAllStories')?.addEventListener('click', () => {
-      this.appController.switchView('viewKenaliBumi');
+    // Quick Quests & Streak Navigation
+    container.querySelector('#btnOpenMisiPage')?.addEventListener('click', () => {
+      this.appController.switchView('viewMisiPahlawan');
     });
 
-    container.querySelectorAll('.story-card').forEach(card => {
-      card.addEventListener('click', () => {
-        this.appController.switchView('viewKenaliBumi');
+    container.querySelector('#btnQuestKuis')?.addEventListener('click', () => {
+      this.appController.switchView('viewMisiPahlawan');
+    });
+
+    // Interactive Quests Handler
+    const handleQuestAction = (btnId, questId, expReward) => {
+      const btn = container.querySelector(btnId);
+      if (!btn) return;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const success = globalState.completeMission(questId, expReward);
+        if (success) {
+          sound.playCelebration();
+          if (typeof confetti === 'function') {
+            confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+          }
+          // Re-render view to refresh EXP, streak, and badges
+          this.render(container);
+        }
       });
-    });
+    };
 
-    // Game Cards Navigation
-    container.querySelector('#btnViewAllGames')?.addEventListener('click', () => {
-      this.appController.switchView('viewTamanAksi');
-    });
-
-    container.querySelector('#gameTamanAksi')?.addEventListener('click', () => {
-      this.appController.switchView('viewTamanAksi');
-    });
-
-    container.querySelector('#gameKuisIklim')?.addEventListener('click', () => {
-      this.appController.switchView('viewMisiPahlawan');
-    });
-
-    container.querySelector('#gamePuzzleKota')?.addEventListener('click', () => {
-      this.appController.switchView('viewTamanAksi');
-    });
-
-    container.querySelector('#gameLabGas')?.addEventListener('click', () => {
-      this.appController.switchView('viewKenaliBumi');
-    });
-
-    container.querySelector('#gameKartuMemori')?.addEventListener('click', () => {
-      this.appController.switchView('viewMisiPahlawan');
-    });
-
-    // Featured Adventure Island CTA
-    container.querySelector('#btnStartAdventureIsland')?.addEventListener('click', () => {
-      this.appController.switchView('viewTamanAksi');
-    });
+    handleQuestAction('#btnQuestLampu', 'quest_lampu', 15);
+    handleQuestAction('#btnQuestKeran', 'quest_keran', 15);
+    handleQuestAction('#btnQuestTumbler', 'quest_tumbler', 20);
   }
 
   /**

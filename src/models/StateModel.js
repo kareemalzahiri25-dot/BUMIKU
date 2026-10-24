@@ -14,7 +14,10 @@ const DEFAULT_STATE = {
   treesCount: 4,
   badges: ['sahabat_bumi', 'hemat_energi', 'pilah_sampah'],
   userLevel: 'Level 2: Sahabat Bumi',
-  nextLevelPoints: 250
+  nextLevelPoints: 250,
+  streakDays: 3,
+  streakWeek: [true, true, true, false, false, false, false], // 7 hari aktif: Sen, Sel, Rab aktif
+  completedMissions: ['quest_lampu']
 };
 
 export class StateModel {
@@ -109,6 +112,28 @@ export class StateModel {
       return true;
     }
     return false;
+  }
+
+  completeMission(missionId, expReward = 15) {
+    if (!this.state.completedMissions) this.state.completedMissions = [];
+    if (!this.state.completedMissions.includes(missionId)) {
+      this.state.completedMissions.push(missionId);
+      this.state.ecoPoints += expReward;
+      this.state.earthTemp = Math.max(1.0, +(this.state.earthTemp - 0.02).toFixed(2));
+      // Pastikan streak aktif
+      if (!this.state.streakDays || this.state.streakDays < 1) {
+        this.state.streakDays = 1;
+      }
+      this.updateUserLevelTitle();
+      this.saveToStorage();
+      this.notify();
+      return true;
+    }
+    return false;
+  }
+
+  isMissionCompleted(missionId) {
+    return Array.isArray(this.state.completedMissions) && this.state.completedMissions.includes(missionId);
   }
 
   hasBadge(badgeId) {
